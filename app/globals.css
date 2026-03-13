@@ -1,0 +1,160 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-brand-orange: #DA8E1F;
+  --color-brand-navy: #1A233E;
+  --color-brand-cyan: #DA8E1F;
+  --color-brand-teal: #C2410C;
+  --color-brand-forest: #1A233E;
+  --color-brand-dark: #0F172A;
+  
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-linear-to-r from-brand-orange to-brand-teal;
+}
+
+.gradient-bg {
+  @apply bg-linear-to-r from-brand-orange to-brand-teal;
+}
+
+.glass-card {
+  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+}
+
+.section-padding {
+  @apply py-20 px-6 md:px-12 lg:px-24;
+}
+
+.square-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 173, 239, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 173, 239, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.header-highlight {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.header-highlight::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: -10%;
+  height: 40%;
+  background-color: var(--highlight-color, #facc15);
+  z-index: -1;
+  transform: rotate(-0.5deg);
+  opacity: 0.8;
+  border-radius: 2px;
+}
+
+.highlight-cyan { --highlight-color: #DA8E1F; }
+.highlight-teal { --highlight-color: #C2410C; }
+.highlight-forest { --highlight-color: #1A233E; }
+.highlight-yellow { --highlight-color: #FDE68A; }
+
+.card-icon-bg {
+  position: absolute;
+  bottom: -10%;
+  right: -5%;
+  font-size: 8rem;
+  opacity: 0.03;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+/* Marker styles removed in favor of header-highlight */
+
+/* Markdown Support (Prose) */
+.prose-react {
+  @apply text-slate-700 leading-relaxed max-w-none;
+}
+
+.prose-react h1 {
+  @apply text-4xl md:text-5xl font-black text-slate-900 mb-8 mt-12 scroll-mt-24;
+}
+
+.prose-react h2 {
+  @apply text-2xl md:text-3xl font-bold text-brand-dark mb-6 mt-10 scroll-mt-24 border-b border-slate-100 pb-2;
+}
+
+.prose-react h3 {
+  @apply text-xl font-bold text-slate-900 mb-4 mt-8;
+}
+
+.prose-react p {
+  @apply mb-6;
+}
+
+.prose-react strong {
+  @apply font-bold text-slate-900;
+}
+
+.prose-react em {
+  @apply text-brand-forest;
+}
+
+.prose-react blockquote {
+  @apply border-l-4 border-brand-cyan bg-slate-50 py-8 px-10 my-10 text-xl text-slate-800 rounded-r-3xl shadow-sm;
+}
+
+.prose-react ul {
+  @apply list-disc pl-6 mb-8 space-y-3;
+}
+
+.prose-react ol {
+  @apply list-decimal pl-6 mb-8 space-y-3;
+}
+
+.prose-react img {
+  @apply rounded-3xl shadow-2xl my-12 w-full object-cover aspect-video;
+}
+
+.prose-react a {
+  @apply font-bold text-brand-forest underline decoration-brand-cyan/30 underline-offset-4 transition-all hover:text-brand-cyan hover:decoration-brand-cyan;
+}
+
+.prose-react code {
+  @apply bg-slate-100 px-1.5 py-0.5 rounded-md font-mono text-sm text-brand-dark;
+}
+
+.prose-react hr {
+  @apply my-16 border-t border-slate-100;
+}
+
+.prose-react table {
+  @apply w-full border-collapse mb-8 text-sm;
+}
+
+.prose-react th {
+  @apply bg-slate-50 text-slate-900 font-bold p-4 text-left border border-slate-100;
+}
+
+.prose-react td {
+  @apply p-4 border border-slate-100;
+}

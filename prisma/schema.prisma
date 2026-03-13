@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  email     String    @unique
+  password  String
+  role      String    @default("USER") // USER or ADMIN
+  posts     Post[]
+  comments  Comment[]
+  logs      ActivityLog[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String    @db.Text
+  image       String?
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  comments    Comment[]
+  section     String    @default("General") // Story, Strategy, Insight, etc.
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slug])
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  content     String   @db.Text
+  rating      Int      @default(5)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  guestName   String?
+  guestEmail  String?
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Campaign {
+  id        String   @id @default(cuid())
+  subject   String
+  content   String   @db.Text
+  template  String
+  sentCount Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String   @db.Text
+  image     String?
+  linkedin  String?
+  facebook  String?
+  instagram String?
+  email     String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  content   String   @db.Text
+  image     String?
+  rating    Int      @default(5)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model ActivityLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  action      String   // e.g., "CREATED", "UPDATED", "DELETED"
+  entity      String   // e.g., "Post", "TeamMember"
+  details     String   @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
