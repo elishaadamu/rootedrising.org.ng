@@ -2,7 +2,7 @@
 title: Tourist Beach Cleanup
 date: 2024-10-14T11:42:00.000Z
 categories: Interventions
-image: /src/images/whatsapp-image-2025-03-12-at-14.52.32_271106fc.jpg
+image: /images/whatsapp-image-2025-03-12-at-14.52.32_271106fc.jpg
 ---
 
 

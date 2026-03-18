@@ -2,7 +2,7 @@
 title: Young Climate Convergence
 date: 2025-03-06T18:00:00.000Z
 categories: Interventions
-image: /src/images/dsp_7285-1-.jpg
+image: /images/dsp_7285-1-.jpg
 ---
 
 

@@ -275,6 +275,7 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
                 <option value="Insight">Insight</option>
                 <option value="Report">Report</option>
                 <option value="News">News</option>
+                <option value="Campaign">Campaign</option>
               </select>
             </div>
           </div>

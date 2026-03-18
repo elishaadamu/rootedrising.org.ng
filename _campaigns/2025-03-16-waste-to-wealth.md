@@ -2,7 +2,7 @@
 title: "Waste to Wealth "
 date: 2024-10-22T12:30:00.000Z
 categories: Interventions
-image: /src/images/whatsapp-image-2025-03-12-at-18.08.58_a7f9e50e.jpg
+image: /images/whatsapp-image-2025-03-12-at-18.08.58_a7f9e50e.jpg
 ---
 Our "Waste to Wealth" event at Government Comprehensive Secondary School (GCSS) Borokiri was a massive hit!
 

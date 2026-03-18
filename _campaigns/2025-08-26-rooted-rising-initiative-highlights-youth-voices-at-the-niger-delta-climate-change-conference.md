@@ -3,7 +3,7 @@ title: Rooted Rising Initiative Highlights Youth Voices at the Niger Delta
   Climate Change Conference
 date: 2025-07-21T08:45:00.000+01:00
 categories: Interventions
-image: /src/images/whatsapp-image-2025-08-26-at-08.18.24_87c5139b.jpg
+image: /images/whatsapp-image-2025-08-26-at-08.18.24_87c5139b.jpg
 ---
 Rooted Rising Initiative Highlighted Youth voices at the Niger Delta Climate Change Conference hosted by the LEKEH Development Foundation, we had the chance to interview young people and really listen. 
 

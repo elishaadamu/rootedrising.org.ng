@@ -2,7 +2,7 @@
 title: Rooted Rising Initiative Joins the 16 Days of Activism
 date: 2024-12-04T00:47:00.000Z
 categories: Interventions
-image: /src/images/whatsapp-image-2025-03-17-at-01.12.02_ec894ad6.jpg
+image: /images/whatsapp-image-2025-03-17-at-01.12.02_ec894ad6.jpg
 ---
 
 

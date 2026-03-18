@@ -2,7 +2,7 @@
 title: Painting the Change (Live Painting Session)
 date: 2026-03-10T19:06:00.000+01:00
 categories: Interventions
-image: /src/images/img_5932.jpg
+image: /images/img_5932.jpg
 ---
 Painting the Change, hosted by the Rooted Rising Development Media Initiative, was more than an event—it was an experience.
 

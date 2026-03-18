@@ -2,7 +2,7 @@
 title: EXPOSE + DEBUNK FALSE CLIMATE CHANGE SOLUTIONS
 date: 2025-04-07T22:31:00.000Z
 categories: Interventions
-image: /src/images/black-and-white-minimalistic-event-launch-countdown-instagram-post.png
+image: /images/black-and-white-minimalistic-event-launch-countdown-instagram-post.png
 ---
 
 𝐉𝐨𝐢𝐧 𝐨𝐮𝐫 𝐂𝐚𝐦𝐩𝐚𝐢𝐠𝐧📢

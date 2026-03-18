@@ -2,7 +2,7 @@
 title: 16 DAYS OF ACTIVISM
 date: 2025-12-16T08:20:00.000+01:00
 categories: Interventions
-image: /src/images/16-days.png
+image: /images/16-days.png
 ---
 During the 16 Days of Activism Against Gender-Based Violence, Rooted Rising Initiative focused on creating conversations that were honest, relatable, and rooted in everyday realities — especially in digital spaces where harm often goes unseen.
 

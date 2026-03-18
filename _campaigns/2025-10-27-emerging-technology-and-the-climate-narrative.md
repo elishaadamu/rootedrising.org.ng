@@ -2,7 +2,7 @@
 title: Emerging Technology and the Climate Narrative
 date: 2025-10-27T17:18:00.000+01:00
 categories: Interventions
-image: /src/images/whatsapp-image-2025-10-21-at-22.19.23_805ef360.jpg
+image: /images/whatsapp-image-2025-10-21-at-22.19.23_805ef360.jpg
 ---
 𝑬𝒎𝒆𝒓𝒈𝒊𝒏𝒈 𝑻𝒆𝒄𝒉𝒏𝒐𝒍𝒐𝒈𝒚 𝒂𝒏𝒅 𝒕𝒉𝒆 𝑪𝒍𝒊𝒎𝒂𝒕𝒆 𝑵𝒂𝒓𝒓𝒂𝒕𝒊𝒗𝒆 
 

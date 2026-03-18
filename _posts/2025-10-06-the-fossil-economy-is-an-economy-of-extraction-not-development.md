@@ -2,7 +2,7 @@
 title: The Fossil Economy is an Economy of Extraction, Not Development
 date: 2025-10-07T00:45:00.000+01:00
 categories: Article
-image: /src/images/the-fossil-economy-is-an-economy-of-extraction-not-development.png
+image: /images/the-fossil-economy-is-an-economy-of-extraction-not-development.png
 ---
 
 

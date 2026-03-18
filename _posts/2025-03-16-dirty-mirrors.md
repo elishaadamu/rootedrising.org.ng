@@ -2,7 +2,7 @@
 title: DIRTY MIRRORS
 date: 2025-03-16T17:13:00.000Z
 categories: Poem
-image: /src/images/45rdf.png
+image: /images/45rdf.png
 ---
 You
 look at me from the lenses of judgment,

@@ -140,7 +140,7 @@ export default function TeamSection() {
           <div className="max-w-2xl">
             <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-teal">Our Leadership</h2>
             <h3 className="text-4xl font-extrabold text-slate-900 md:text-5xl lg:text-6xl mb-6 tracking-tight">
-              The Minds Behind <span className="header-highlight highlight-yellow text-slate-900">IREACT</span>
+              The Minds Behind <span className="header-highlight highlight-yellow text-slate-900">Rooted Rising Initiative</span>
             </h3>
             <p className="text-lg text-slate-600 font-medium leading-relaxed">
               Meet the dedicated team driving sustainable change and climate resilience across underserved communities.

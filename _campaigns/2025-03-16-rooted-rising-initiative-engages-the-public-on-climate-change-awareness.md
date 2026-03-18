@@ -2,7 +2,7 @@
 title: Rooted Rising Initiative Engages the Public on Climate Change Awareness
 date: 2024-09-16T22:01:00.000Z
 categories: Interventions
-image: /src/images/w.jpg
+image: /images/w.jpg
 ---
 In July 2024, the Rooted Rising Initiative took to the streets of Port Harcourt to gauge public knowledge about climate change through a public interview session. This initiative was designed to assess how well people understand climate issues, their impact, and the role of communities in fostering climate resilience.
 

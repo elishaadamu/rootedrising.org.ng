@@ -2,7 +2,7 @@
 title: NIGER DELTA ALTERNATIVES CONVERGENCE MANIFESTO
 date: 2025-05-12T18:01:00.000Z
 categories: Interventions
-image: /src/images/rooted-rising-inititiative.png
+image: /images/rooted-rising-inititiative.png
 ---
 At the 4th edition of the Niger Delta Alternatives Convergence, our team at Rooted Rising stood with communities demanding socio-ecological justice.
 

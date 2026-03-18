@@ -2,7 +2,7 @@
 title: ARTVOCACY
 date: 2024-10-17T00:20:00.000Z
 categories: Interventions
-image: /src/images/whatsapp-image-2025-03-12-at-14.52.32_b03dddb8.jpg
+image: /images/whatsapp-image-2025-03-12-at-14.52.32_b03dddb8.jpg
 ---
 On October 17, 2024, Rooted Rising brought environmental education to life at State Primary School, Churchill 1 & 3, through an engaging and creative initiative. The goal? To equip young minds with the power of art as a tool for climate advocacy.
 

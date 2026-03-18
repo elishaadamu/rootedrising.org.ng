@@ -2,7 +2,7 @@
 title: "We are all Eyewitnesses "
 date: 2024-08-16T13:10:00.000Z
 categories: Interventions
-image: /src/images/o.jpg
+image: /images/o.jpg
 ---
 
 

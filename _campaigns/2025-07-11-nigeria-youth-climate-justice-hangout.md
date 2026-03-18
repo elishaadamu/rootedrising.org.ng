@@ -2,7 +2,7 @@
 title: "NIGERIA YOUTH CLIMATE JUSTICE HANGOUT "
 date: 2025-06-14T17:38:00.000Z
 categories: Interventions
-image: /src/images/whatsapp-image-2025-06-15-at-22.12.27_a35a7497.jpg
+image: /images/whatsapp-image-2025-06-15-at-22.12.27_a35a7497.jpg
 ---
 
 

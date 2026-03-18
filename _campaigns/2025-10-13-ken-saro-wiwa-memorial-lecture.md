@@ -2,7 +2,7 @@
 title: Ken Saro-Wiwa Memorial Lecture
 date: 2025-10-13T14:00:00.000+01:00
 categories: Interventions
-image: /src/images/ken-sarowiwa.png
+image: /images/ken-sarowiwa.png
 ---
 On October 10th, 2025, the Rooted Rising Initiative joined others in Port Harcourt, Rivers State, to honor the memory of Ken Saro-Wiwa at his 30th Memorial Lecture.
 

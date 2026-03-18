@@ -2,7 +2,7 @@
 title: NIGERIA'S LIFELINE UNDER THREAT
 date: 2025-03-14T12:22:00.000Z
 categories: Article
-image: /src/images/45rdf-1-.png
+image: /images/45rdf-1-.png
 ---
 
 While Nigeria borders the Atlantic Ocean, our country is more richly shaped by the vast network of rivers, tributaries, wetlands, and inland waterways that flow through our landscapes—from the mighty River Niger and River Benue to the countless creeks and streams that support life, livelihoods, and local ecosystems.

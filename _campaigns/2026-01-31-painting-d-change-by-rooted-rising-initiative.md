@@ -2,7 +2,7 @@
 title: Painting D Change by Rooted Rising Initiative
 date: 2026-01-31T17:30:00.000+01:00
 categories: Interventions
-image: /src/images/screenshot-42-.png
+image: /images/screenshot-42-.png
 ---
 Rooted Rising Initiative hosted a webinar for storytellers, artists, creatives, and techies using their skills for social impact. 
 
