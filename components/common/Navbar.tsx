@@ -13,7 +13,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "Campaigns", href: "/campaigns" },
   { name: "About Us", href: "/about" },
-  { name: "Blogs", href: "/blog" },
+  { name: "Blogs", href: "/blogs" },
 ];
 
 export default function Navbar() {
@@ -79,18 +79,71 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-10 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={cn(
-                "text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
-                pathname === link.href ? "text-brand-orange" : "text-white/80 hover:text-white"
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            if (link.name === "Blogs") {
+              return (
+                <div 
+                  key={link.name}
+                  className="relative group py-2"
+                  onMouseEnter={() => setBlogDropdownOpen(true)}
+                  onMouseLeave={() => setBlogDropdownOpen(false)}
+                >
+                  <button
+                    className={cn(
+                      "flex items-center gap-1 text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
+                      pathname.startsWith("/blog") ? "text-brand-orange" : "text-white/80 hover:text-white"
+                    )}
+                  >
+                    {link.name}
+                    <ChevronDown size={14} className={cn("transition-transform opacity-60", blogDropdownOpen && "rotate-180")} />
+                  </button>
+
+                  <AnimatePresence>
+                    {blogDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute left-0 mt-2 w-48 overflow-hidden rounded-2xl bg-slate-900 border border-white/10 shadow-2xl p-2 z-[60]"
+                      >
+                         <Link 
+                           href="/blogs/articles"
+                           className="block w-full text-left p-3 rounded-xl text-xs font-black text-white/70 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest"
+                         >
+                            Articles
+                         </Link>
+                         <Link 
+                           href="/blogs/poems"
+                           className="block w-full text-left p-3 rounded-xl text-xs font-black text-white/70 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest"
+                         >
+                            Poems
+                         </Link>
+                         <div className="h-px bg-white/5 my-1 mx-2"></div>
+                         <Link 
+                           href="/blogs"
+                           className="block w-full text-left p-3 rounded-xl text-[10px] font-black text-brand-orange/70 hover:text-brand-orange hover:bg-brand-orange/5 transition-all uppercase tracking-widest"
+                         >
+                            All Stories
+                         </Link>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={cn(
+                  "text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
+                  pathname === link.href ? "text-brand-orange" : "text-white/80 hover:text-white"
+                )}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
 
           <div className="flex items-center gap-4 border-l border-white/10 pl-8">
             {session ? (
@@ -172,20 +225,70 @@ export default function Navbar() {
             className="md:hidden overflow-hidden bg-brand-navy border-t border-white/5 mt-4 -mx-6 rounded-b-[2rem] shadow-2xl"
           >
             <div className="flex flex-col gap-1 p-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className={cn(
-                    "flex items-center justify-between p-4 rounded-2xl text-base font-black transition-all uppercase tracking-widest",
-                    pathname === link.href ? "bg-white/10 text-brand-orange" : "text-white/80 hover:bg-white/5 hover:text-white"
-                  )}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                  <ArrowRight size={16} className="opacity-40" />
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                if (link.name === "Blogs") {
+                  return (
+                    <div key={link.name} className="flex flex-col">
+                      <button
+                        onClick={() => setMobileBlogOpen(!mobileBlogOpen)}
+                        className={cn(
+                          "flex items-center justify-between p-4 rounded-2xl text-base font-black transition-all uppercase tracking-widest",
+                          pathname.startsWith("/blog") ? "bg-white/10 text-brand-orange" : "text-white/80 hover:bg-white/5"
+                        )}
+                      >
+                        {link.name}
+                        <ChevronDown size={18} className={cn("transition-transform opacity-40", mobileBlogOpen && "rotate-180")} />
+                      </button>
+                      <AnimatePresence>
+                        {mobileBlogOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden flex flex-col pl-6"
+                          >
+                            <Link
+                              href="/blogs/articles"
+                              className="p-4 text-sm font-bold text-white/60 hover:text-white uppercase tracking-widest"
+                              onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
+                            >
+                              Articles
+                            </Link>
+                            <Link
+                              href="/blogs/poems"
+                              className="p-4 text-sm font-bold text-white/60 hover:text-white uppercase tracking-widest"
+                              onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
+                            >
+                              Poems
+                            </Link>
+                            <Link
+                              href="/blogs"
+                              className="p-4 text-sm font-bold text-brand-orange/60 hover:text-brand-orange uppercase tracking-widest"
+                              onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
+                            >
+                              All Stories
+                            </Link>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={cn(
+                      "flex items-center justify-between p-4 rounded-2xl text-base font-black transition-all uppercase tracking-widest",
+                      pathname === link.href ? "bg-white/10 text-brand-orange" : "text-white/80 hover:bg-white/5 hover:text-white"
+                    )}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.name}
+                    <ArrowRight size={16} className="opacity-40" />
+                  </Link>
+                );
+              })}
               
               <div className="mt-4 pt-6 border-t border-white/5 flex flex-col gap-4">
                 {session ? (

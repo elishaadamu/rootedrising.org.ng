@@ -1,6 +1,7 @@
 import Hero from "@/components/common/Hero";
 import { BlogCard } from "@/components/blog/BlogComponents";
 import prisma from "@/lib/prisma";
+import { getAllPosts } from "@/lib/blog";
 
 // Utility to create a safe plaintext excerpt from HTML content
 function createExcerpt(htmlContent: string, maxLength: number = 150) {
@@ -17,10 +18,11 @@ export default async function BlogListingPage({
 }) {
   const { section } = await searchParams;
   
-  const posts = await prisma.post.findMany({
+  // 1. Fetch from Database
+  const dbPosts = await prisma.post.findMany({
     where: { 
       published: true,
-      ...(section ? { section } : {})
+      section: section ? { equals: section } : { notIn: ["Campaign"] }
     },
     include: { 
       author: true,
@@ -30,6 +32,25 @@ export default async function BlogListingPage({
     },
     orderBy: { createdAt: "desc" },
   });
+
+  // 2. Fetch from Markdown Files
+  const mdPosts = getAllPosts().filter(p => !section || p.category === section);
+
+  // 3. Combine and Sort
+  const posts = [
+    ...mdPosts.map(p => ({
+      ...p,
+      createdAt: p.date,
+      section: p.category,
+      author: { name: p.author },
+      comments: [],
+      isMarkdown: true
+    })),
+    ...dbPosts.map(p => ({
+      ...p,
+      isMarkdown: false
+    }))
+  ].sort((a, b) => new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime());
 
   return (
     <div className="flex flex-col">
@@ -69,7 +90,7 @@ export default async function BlogListingPage({
               return (
                 <BlogCard key={post.slug} post={{
                   ...post,
-                  date: new Date(post.createdAt).toLocaleDateString(),
+                  date: new Date(post.createdAt).toISOString(),
                   author: post.author.name,
                   rating: avgRating,
                   category: post.section,

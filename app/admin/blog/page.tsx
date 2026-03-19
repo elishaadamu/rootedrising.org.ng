@@ -5,6 +5,9 @@ import DeletePostButton from "@/components/admin/DeletePostButton";
 
 export default async function AdminBlog() {
   const posts = await prisma.post.findMany({
+    where: {
+      section: { not: "Campaign" }
+    },
     include: { author: true },
     orderBy: { createdAt: "desc" },
   });

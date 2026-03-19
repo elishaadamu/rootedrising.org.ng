@@ -270,11 +270,8 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
                 onChange={(e) => setSection(e.target.value)}
                 className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-forest/20"
               >
-                <option value="Story">Story</option>
-                <option value="Strategy">Strategy</option>
-                <option value="Insight">Insight</option>
-                <option value="Report">Report</option>
-                <option value="News">News</option>
+                <option value="Articles">Articles</option>
+                <option value="Poems">Poems</option>
                 <option value="Campaign">Campaign</option>
               </select>
             </div>

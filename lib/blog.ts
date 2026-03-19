@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const postsDirectory = path.join(process.cwd(), "content/blog");
+const postsDirectory = path.join(process.cwd(), "_posts");
 
 export interface BlogPost {
   slug: string;
@@ -25,59 +25,44 @@ export function getAllPosts(): BlogPost[] {
   const allPostsData = fileNames
     .filter((fileName) => fileName.endsWith(".md"))
     .map((fileName) => {
-      // Remove ".md" from file name to get slug
       const slug = fileName.replace(/\.md$/, "");
-
-      // Read markdown file as string
       const fullPath = path.join(postsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, "utf8");
-
-      // Use gray-matter to parse the post metadata section
       const matterResult = matter(fileContents);
 
-      // Combine the data with the slug
       return {
         slug,
         content: matterResult.content,
-        ...(matterResult.data as { 
-          title: string; 
-          date: string; 
-          excerpt: string; 
-          image: string; 
-          category: string; 
-          author: string; 
-        }),
-      };
+        title: matterResult.data.title || "Untitled Perspective",
+        date: matterResult.data.date || new Date().toISOString(),
+        excerpt: matterResult.data.excerpt || matterResult.content.slice(0, 150) + "...",
+        image: matterResult.data.image || "/images/placeholder.png",
+        category: matterResult.data.categories || matterResult.data.category || "Insight",
+        author: matterResult.data.author || "Rooted Rising",
+      } as BlogPost;
     });
 
-  // Sort posts by date
-  return allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
+  return allPostsData.sort((a, b) => (new Date(b.date).getTime() - new Date(a.date).getTime()));
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
   try {
     const fullPath = path.join(postsDirectory, `${slug}.md`);
+    if (!fs.existsSync(fullPath)) return null;
+
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const matterResult = matter(fileContents);
 
     return {
       slug,
       content: matterResult.content,
-      ...(matterResult.data as { 
-        title: string; 
-        date: string; 
-        excerpt: string; 
-        image: string; 
-        category: string; 
-        author: string; 
-      }),
-    };
+      title: matterResult.data.title || "Untitled Perspective",
+      date: matterResult.data.date || new Date().toISOString(),
+      excerpt: matterResult.data.excerpt || matterResult.content.slice(0, 150) + "...",
+      image: matterResult.data.image || "/images/placeholder.png",
+      category: matterResult.data.categories || matterResult.data.category || "Insight",
+      author: matterResult.data.author || "Rooted Rising",
+    } as BlogPost;
   } catch (e) {
     return null;
   }

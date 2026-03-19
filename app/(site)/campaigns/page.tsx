@@ -93,7 +93,7 @@ export default async function CampaignsPage() {
             <p className="mt-6 text-slate-500 max-w-2xl mx-auto font-medium">Documenting the lived experiences of communities at the forefront of the climate crisis through visual storytelling.</p>
           </div>
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-            {videos.map((video, idx) => (
+            {videos.map((video: any, idx: number) => (
               <VideoCard 
                 key={idx}
                 title={video.title}
