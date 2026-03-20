@@ -2,6 +2,8 @@ import Hero from "@/components/common/Hero";
 import { BlogCard } from "@/components/blog/BlogComponents";
 import prisma from "@/lib/prisma";
 import { getAllPosts } from "@/lib/blog";
+import Link from "next/link";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 // Utility to create a safe plaintext excerpt from HTML content
 function createExcerpt(htmlContent: string, maxLength: number = 150) {
@@ -14,24 +16,31 @@ function createExcerpt(htmlContent: string, maxLength: number = 150) {
 export default async function BlogListingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ section?: string }>;
+  searchParams: Promise<{ section?: string; page?: string }>;
 }) {
-  const { section } = await searchParams;
+  const { section, page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const ITEMS_PER_PAGE = 6;
   
   // 1. Fetch from Database
-  const dbPosts = await prisma.post.findMany({
-    where: { 
-      published: true,
-      section: section ? { equals: section } : { notIn: ["Campaign"] }
-    },
-    include: { 
-      author: true,
-      comments: {
-        select: { rating: true }
-      }
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  let dbPosts: any[] = [];
+  try {
+    dbPosts = await prisma.post.findMany({
+      where: { 
+        published: true,
+        section: section ? { equals: section } : { notIn: ["Campaign"] }
+      },
+      include: { 
+        author: true,
+        comments: {
+          select: { rating: true }
+        }
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error) {
+    console.error("Database error fetching blog posts:", error);
+  }
 
   // 2. Fetch from Markdown Files
   const mdPosts = getAllPosts().filter(p => !section || p.category === section);
@@ -52,19 +61,37 @@ export default async function BlogListingPage({
     }))
   ].sort((a, b) => new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime());
 
+  const featuredPost = posts[0];
+  const allGridPosts = posts.slice(1);
+  
+  const totalPages = Math.ceil(allGridPosts.length / ITEMS_PER_PAGE);
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const gridPosts = allGridPosts.slice(offset, offset + ITEMS_PER_PAGE);
+
   return (
     <div className="flex flex-col">
       <Hero 
-        title={section ? `${section} Insights` : "Perspectives & Insights"}
-        subtitle={section 
+        title={featuredPost?.title || (section ? `${section} Insights` : "Perspectives & Insights")}
+        subtitle={featuredPost ? createExcerpt(featuredPost.content, 120) : (section 
           ? `Deep dive into our ${section.toLowerCase()} related research, stories, and impacts across Sub-Saharan Africa.`
-          : "Exploring the frontier of climate resilience, rural technology, and community-led innovation across Sub-Saharan Africa."}
-        backgroundImage="/images/gallery/IMG_2023.JPG"
+          : "Exploring the frontier of climate resilience, rural technology, and community-led innovation across Sub-Saharan Africa.")}
+        backgroundImage={featuredPost?.image || "/images/gallery/IMG_2023.JPG"}
         height="half"
         titleSize="lg"
-      />
+      >
+         {featuredPost && (
+            <div className="mt-8 flex justify-center">
+               <Link 
+                href={`/blogs/${featuredPost.slug}`}
+                className="group flex items-center gap-3 px-8 py-4 bg-brand-forest text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-brand-orange transition-all shadow-2xl hover:-translate-y-1 active:scale-95"
+               >
+                 Read Featured Story <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+               </Link>
+            </div>
+         )}
+      </Hero>
 
-      <section className="section-padding bg-slate-50 relative overflow-hidden">
+      <section className="section-padding bg-slate-50 relative overflow-hidden font-outfit">
         {/* Background decorative patterns */}
         <div className="absolute top-0 right-0 -mr-48 -mt-48 h-[600px] w-[600px] rounded-full bg-brand-cyan/5 blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 -ml-48 -mb-48 h-[600px] w-[600px] rounded-full bg-brand-forest/5 blur-3xl pointer-events-none"></div>
@@ -83,7 +110,7 @@ export default async function BlogListingPage({
           </div>
 
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post: any, index: number) => {
+            {gridPosts.map((post: any, index: number) => {
               const totalRating = post.comments.reduce((acc: number, curr: any) => acc + curr.rating, 0);
               const avgRating = post.comments.length > 0 ? totalRating / post.comments.length : 0;
               
@@ -99,6 +126,37 @@ export default async function BlogListingPage({
               );
             })}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 py-20 border-t border-slate-100 mt-20">
+              <Link
+                href={`/blogs?${section ? `section=${section}&` : ''}page=${Math.max(1, currentPage - 1)}`}
+                className={`p-4 rounded-2xl bg-white border border-slate-100 flex items-center justify-center transition-all hover:bg-slate-50 ${currentPage === 1 ? 'pointer-events-none opacity-40' : ''}`}
+              >
+                <ChevronLeft size={20} className="text-slate-600" />
+              </Link>
+
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <Link
+                    key={p}
+                    href={`/blogs?${section ? `section=${section}&` : ''}page=${p}`}
+                    className={`h-12 w-12 rounded-2xl flex items-center justify-center text-sm font-black transition-all ${currentPage === p ? 'bg-brand-forest text-white shadow-lg' : 'bg-white border border-slate-100 text-slate-400 hover:border-slate-300'}`}
+                  >
+                    {p}
+                  </Link>
+                ))}
+              </div>
+
+              <Link
+                href={`/blogs?${section ? `section=${section}&` : ''}page=${Math.min(totalPages, currentPage + 1)}`}
+                className={`p-4 rounded-2xl bg-white border border-slate-100 flex items-center justify-center transition-all hover:bg-slate-50 ${currentPage === totalPages ? 'pointer-events-none opacity-40' : ''}`}
+              >
+                <ChevronRight size={20} className="text-slate-600" />
+              </Link>
+            </div>
+          )}
 
           {posts.length === 0 && (
             <div className="text-center py-40">

@@ -4,6 +4,66 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/actions/auth";
 import { revalidatePath } from "next/cache";
 import { recordActivity } from "./logs";
+import { getAllPosts } from "@/lib/blog";
+import { notifySubscribersOfNewPost } from "./newsletter";
+
+export async function getBlogCategories() {
+  try {
+    // 1. Get from Database
+    const dbPosts = await prisma.post.findMany({
+      where: { published: true, section: { notIn: ["Campaign", "General"] } },
+      select: { section: true }
+    });
+    const dbCategories = Array.from(new Set(dbPosts.map(p => p.section)));
+
+    // 2. Get from Markdown
+    const mdPosts = getAllPosts();
+    const mdCategories = Array.from(new Set(mdPosts.map(p => p.category)));
+
+    // 3. Combine and filter
+    return Array.from(new Set([...dbCategories, ...mdCategories]))
+      .filter(Boolean)
+      .sort();
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return ["Articles", "Poems"];
+  }
+}
+
+export async function getBlogCategoriesWithCount() {
+  try {
+    // 1. Get from Database
+    const dbPosts = await prisma.post.findMany({
+      where: { published: true, section: { notIn: ["Campaign", "General"] } },
+      select: { section: true }
+    });
+    
+    // 2. Get from Markdown
+    const mdPosts = getAllPosts();
+    
+    // 3. Count categories
+    const counts: Record<string, number> = {};
+    
+    dbPosts.forEach(p => {
+      counts[p.section] = (counts[p.section] || 0) + 1;
+    });
+    
+    mdPosts.forEach(p => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    
+    // 4. Format for UI
+    return Object.entries(counts).map(([name, count]) => ({
+      name,
+      slug: name.toLowerCase(),
+      count
+    })).sort((a, b) => b.count - a.count);
+  } catch (error) {
+    console.error("Error fetching categories with count:", error);
+    return [];
+  }
+}
+
 
 export async function createBlogPost(data: { title: string; excerpt: string; content: string; image: string; section?: string; published?: boolean }) {
   const session = await getSession();
@@ -42,6 +102,10 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
       entity: "Post",
       details: `Created blog post: ${title}`
     });
+
+    if (published) {
+      await notifySubscribersOfNewPost({ title, excerpt, slug, section, image });
+    }
 
     revalidatePath("/blog");
     revalidatePath("/admin/blog");
@@ -89,6 +153,10 @@ export async function updateBlogPost(id: string, data: { title: string; excerpt:
       entity: "Post",
       details: `Updated blog post: ${title}`
     });
+
+    if (published) {
+      await notifySubscribersOfNewPost({ title, excerpt, slug, section, image });
+    }
 
     revalidatePath("/blog");
     revalidatePath("/admin/blog");

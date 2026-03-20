@@ -5,27 +5,69 @@ import { getCampaignBySlug } from "@/lib/campaigns";
 import { Calendar, User as UserIcon, Share2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import ShareButtons from "@/components/blog/ShareButtons";
+import CommentSection from "@/components/blog/CommentSection";
+import { getSession } from "@/lib/actions/auth";
 
 export default async function CampaignDetailPage(props: { params: Promise<{ slug: string }> }) {
   const { slug } = await props.params;
 
   if (!slug) return notFound();
 
-  // Try fetching from database first (recent ones)
+  const session = await getSession();
+
+  // Fetch or setup campaign from DB if possible
   let campaign: any = await prisma.post.findUnique({
     where: { slug, section: "Campaign" },
-    include: { author: true }
+    include: { 
+      author: true,
+      comments: {
+        include: { user: true },
+        orderBy: { createdAt: "desc" }
+      }
+    }
   });
 
   let isMarkdown = false;
   let markdownContent = "";
 
-  // If not in DB, try markdown files
   if (!campaign) {
     const mdCampaign = getCampaignBySlug(slug);
     if (!mdCampaign) return notFound();
     
-    campaign = mdCampaign;
+    // Setup shadow post if it doesn't exist for comments
+    // Fetch an admin user to be the owner/author of shadow posts
+    const adminUser = await prisma.user.findFirst({ where: { role: "ADMIN" } });
+    
+    if (adminUser) {
+      try {
+        campaign = await prisma.post.create({
+          data: {
+            slug: mdCampaign.slug,
+            title: mdCampaign.title,
+            content: mdCampaign.content,
+            excerpt: mdCampaign.excerpt,
+            image: mdCampaign.image,
+            section: "Campaign",
+            published: true,
+            authorId: adminUser.id,
+          },
+          include: { 
+            author: true, 
+            comments: {
+                include: { user: true },
+                orderBy: { createdAt: "desc" }
+            }
+          }
+        });
+      } catch (err) {
+        // Fallback to pure MD object if DB creation fails
+        campaign = { ...mdCampaign, comments: [] };
+      }
+    } else {
+        campaign = { ...mdCampaign, comments: [] };
+    }
+    
     isMarkdown = true;
     markdownContent = mdCampaign.content;
   }
@@ -96,6 +138,12 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
                    </p>
                 </div>
              </div>
+
+             <div className="h-8 border-l border-slate-100 hidden sm:block"></div>
+
+             <div className="flex-1 flex justify-end">
+               <ShareButtons title={campaign.title} slug={slug} />
+             </div>
           </div>
 
           {/* Content */}
@@ -106,11 +154,17 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
             prose-blockquote:border-l-brand-cyan prose-blockquote:bg-slate-50 prose-blockquote:p-6 sm:prose-blockquote:p-8 prose-blockquote:rounded-3xl prose-blockquote:italic
             prose-img:rounded-3xl sm:prose-img:rounded-[2.5rem] prose-img:shadow-2xl">
             {isMarkdown ? (
-              <ReactMarkdown>{markdownContent}</ReactMarkdown>
+               <ReactMarkdown>{markdownContent}</ReactMarkdown>
             ) : (
-              <div dangerouslySetInnerHTML={{ __html: decodeHTML(campaign.content) }} />
+               <div dangerouslySetInnerHTML={{ __html: decodeHTML(campaign.content) }} />
             )}
           </div>
+
+          <CommentSection 
+            postId={campaign.id} 
+            comments={campaign.comments || []} 
+            session={session} 
+          />
         </div>
       </div>
     </article>

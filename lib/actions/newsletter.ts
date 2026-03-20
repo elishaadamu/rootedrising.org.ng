@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { sendEmail } from "@/lib/mail";
+import { sendEmail, sendBulkEmail } from "@/lib/mail";
 import { getSession } from "./auth";
 import { recordActivity } from "./logs";
 
@@ -32,15 +32,15 @@ export async function subscribeNewsletter(formData: FormData) {
     try {
       await sendEmail({
         to: email,
-        subject: "Welcome to the IREACT Community! 🌍",
+        subject: "Welcome to the Rooted Rising Community! 🌍",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 20px; text-align: center;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://ireactinitiative.org'}">
-              <img src="cid:logo" alt="REACT Logo" style="height: 50px; margin-bottom: 20px; border: none;" />
+            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}">
+              <img src="cid:logo" alt="Rooted Rising Logo" style="height: 50px; margin-bottom: 20px; border: none;" />
             </a>
-            <h2 style="color: #059669; margin-top: 0;">Welcome to REACT!</h2>
+            <h2 style="color: #DA8E1F; margin-top: 0;">Welcome to Rooted Rising!</h2>
             <div style="text-align: left;">
-              <p>Thank you for subscribing to our newsletter. You're now part of a global youth-led community dedicated to climate resilience and sustainable development.</p>
+              <p>Thank you for subscribing to our newsletter. You're now part of a global youth-led community dedicated to climate resilience and sustainable development in underserved communities.</p>
               <p>We'll keep you updated with:</p>
               <ul>
                 <li>Localized climate insights</li>
@@ -50,7 +50,7 @@ export async function subscribeNewsletter(formData: FormData) {
               <p>Stay connected!</p>
             </div>
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #777;">
-              © ${new Date().getFullYear()} IREACT Initiative. Translating global goals into community action.
+              © ${new Date().getFullYear()} Rooted Rising Initiative. Roots of Resilience, Rising for our Future.
             </div>
           </div>
         `,
@@ -109,40 +109,35 @@ export async function sendCampaign(formData: FormData) {
     }
 
 
-    // We'll send them in a loop, for a real app we'd use a queue
-    let sentCount = 0;
-    for (const sub of subscribers) {
-      try {
-        await sendEmail({
-          to: sub.email,
-          subject: subject,
-          html: `
-            <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 20px; color: #1e293b;">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://ireactinitiative.org'}">
-                  <img src="cid:logo" alt="REACT Logo" style="height: 60px; margin-bottom: 20px; border: none;" />
-                </a>
-                <h1 style="color: #059669; margin: 0;">REACT Initiative</h1>
-                <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: bold; color: #64748b;">Rural Empowerment and Climate Technology</p>
-              </div>
-              <div style="line-height: 1.6; font-size: 16px;">
-                ${content.replace(/\n/g, '<br/>')}
-              </div>
-              <div style="margin-top: 40px; text-align: center;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://ireactinitiative.org'}/blog" style="background-color: #059669; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block;">Read More on our Blog</a>
-              </div>
-              <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #94a3b8; text-align: center;">
-                You are receiving this because you subscribed to the IREACT Initiative updates.<br/>
-                45 Yakubu Gowon Way, Jos, Nigeria
-              </div>
-            </div>
-          `,
-        });
-        sentCount++;
-      } catch (e) {
-        console.error(`Failed to send campaign to ${sub.email}:`, e);
-      }
-    }
+    // Optimize: Send in bulk using ZeptoMail's multiple recipients feature
+    const emails = subscribers.map((sub: any) => sub.email);
+    const result = await sendBulkEmail({
+      emails,
+      subject,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 20px; color: #1e293b;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}">
+              <img src="cid:logo" alt="Rooted Rising Logo" style="height: 60px; margin-bottom: 20px; border: none;" />
+            </a>
+            <h1 style="color: #DA8E1F; margin: 0;">Rooted Rising</h1>
+            <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: bold; color: #64748b;">Roots of Resilience, Rising for our Future</p>
+          </div>
+          <div style="line-height: 1.6; font-size: 16px;">
+            ${content.replace(/\n/g, '<br/>')}
+          </div>
+          <div style="margin-top: 40px; text-align: center;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/blogs" style="background-color: #1A233E; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block;">Read More on our Blog</a>
+          </div>
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #94a3b8; text-align: center;">
+            You are receiving this because you subscribed to the Rooted Rising Initiative updates.<br/>
+            Jos, Nigeria
+          </div>
+        </div>
+      `,
+    });
+
+    const sentCount = (result as any).count || 0;
 
     // Log the campaign
     await (prisma as any).campaign.create({
@@ -165,5 +160,48 @@ export async function sendCampaign(formData: FormData) {
   } catch (error) {
     console.error("Campaign error:", error);
     return { error: "Failed to process campaign. Please check SMTP settings." };
+  }
+}
+
+export async function notifySubscribersOfNewPost(post: { title: string; excerpt: string; slug: string; section?: string; image?: string }) {
+  try {
+    const subscribers = await (prisma as any).newsletter.findMany();
+    if (subscribers.length === 0) return { success: true, message: "No subscribers" };
+
+    const emails = subscribers.map((sub: any) => sub.email);
+    const postUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/blogs/${post.slug}`;
+
+    return await sendBulkEmail({
+      emails,
+      subject: `New Perspectives: ${post.title} 📝`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 20px; color: #1e293b;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}">
+              <img src="cid:logo" alt="Rooted Rising Logo" style="height: 60px; margin-bottom: 20px; border: none;" />
+            </a>
+            <h1 style="color: #DA8E1F; margin: 0;">New Post Alert!</h1>
+            <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: bold; color: #64748b;">Latest from Rooted Rising Initiative</p>
+          </div>
+          
+          ${post.image ? `<div style="margin-bottom: 25px;"><img src="${post.image}" alt="${post.title}" style="width: 100%; border-radius: 15px; max-height: 300px; object-cover" /></div>` : ''}
+          
+          <h2 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 10px;">${post.title}</h2>
+          <p style="font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 25px;">${post.excerpt || 'Read our latest insights on climate resilience and sustainable development.'}</p>
+          
+          <div style="text-align: center; margin-bottom: 30px;">
+            <a href="${postUrl}" style="background-color: #1A233E; color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; display: inline-block;">Continue Reading</a>
+          </div>
+          
+          <div style="padding-top: 25px; border-top: 1px solid #f1f5f9; font-size: 12px; color: #94a3b8; text-align: center;">
+            You are receiving this because you subscribed to Rooted Rising updates.<br/>
+            Jos, Nigeria
+          </div>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error("Post notification error:", error);
+    return { success: false, error };
   }
 }

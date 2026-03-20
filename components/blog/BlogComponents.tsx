@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Calendar, User, ArrowRight, Star } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Calendar, User, ArrowRight, Star, Mail } from "lucide-react";
+import { useState } from "react";
 
 interface BlogPost {
   slug: string;
@@ -127,14 +128,7 @@ export function BlogSection({ posts }: { posts: BlogPost[] }) {
   );
 }
 
-export function BlogSidebar({ recentPosts }: { recentPosts: any[] }) {
-  const categories = [
-    { name: "Articles", slug: "articles", count: 12 },
-    { name: "Poems", slug: "poems", count: 5 },
-    { name: "Research", slug: "research", count: 8 },
-    { name: "Impact", slug: "impact", count: 15 }
-  ];
-
+export function BlogSidebar({ recentPosts, categories = [] }: { recentPosts: any[], categories?: any[] }) {
   return (
     <aside className="space-y-12">
       {/* Search or About could go here */}
@@ -203,15 +197,7 @@ export function BlogSidebar({ recentPosts }: { recentPosts: any[] }) {
         </div>
       </div>
 
-      {/* Newsletter / CTA */}
-      <div className="bg-brand-forest rounded-[2.5rem] p-8 sm:p-10 text-white relative overflow-hidden shadow-2xl shadow-forest-500/20">
-         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-         <h4 className="text-lg font-black mb-4 relative z-10 leading-tight">Join our green community</h4>
-         <p className="text-xs text-white/70 font-medium mb-6 relative z-10 leading-relaxed">Get the latest climate insights and impact stories delivered to your inbox.</p>
-         <button className="w-full py-3 bg-white text-brand-forest rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all shadow-lg active:scale-95">
-            Subscribe Now
-         </button>
-      </div>
     </aside>
+
   );
 }

@@ -48,7 +48,7 @@ export default function Hero({
           className="object-cover brightness-[0.7] transition-scale duration-5000 ease-linear hover:scale-105"
           priority
         />
-        <div className="absolute inset-0 bg-linear-to-b from-brand-dark/60 via-brand-dark/30 to-slate-900/80 transition-opacity"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-brand-dark/5 via-brand-dark/10 to-slate-900/10 transition-opacity"></div>
         <div className="absolute inset-0 square-grid opacity-20"></div>
       </div>
       

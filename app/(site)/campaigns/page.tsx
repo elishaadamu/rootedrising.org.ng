@@ -4,19 +4,23 @@ import prisma from "@/lib/prisma";
 import { getAllCampaigns } from "@/lib/campaigns";
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink, ArrowRight } from "lucide-react";
+import { ExternalLink, ArrowRight, Star } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function CampaignsPage() {
   // 1. Videos (From Database with Fallback)
-  let dbVideos = (prisma as any).video 
-    ? await (prisma as any).video.findMany({
+  let dbVideos: any[] = [];
+  try {
+    if ((prisma as any).video) {
+      dbVideos = await (prisma as any).video.findMany({
         where: { active: true },
         orderBy: { order: "asc" }
-      })
-    : [];
-
+      });
+    }
+  } catch (error) {
+    console.error("Database error fetching videos:", error);
+  }
 
   const hardcodedVideos = [
     { title: "Oil Extraction and Water Pollution", link: "https://www.youtube.com/embed/dy-baZfnC-c?si=qi38nrQ_swvxAdXY" },
@@ -34,19 +38,37 @@ export default async function CampaignsPage() {
     ? dbVideos.map((v: any) => ({ title: v.title, link: v.url }))
     : hardcodedVideos;
 
-
   // 2. Campaign Blogs (Markdown + Prisma)
   const mdCampaigns = getAllCampaigns();
-  const dbCampaigns = await prisma.post.findMany({
-    where: { section: "Campaign", published: true },
-    include: { author: true },
-    orderBy: { createdAt: "desc" }
+  let dbCampaigns: any[] = [];
+  try {
+    dbCampaigns = await prisma.post.findMany({
+      where: { section: "Campaign", published: true },
+      include: { 
+        author: true,
+        comments: { select: { rating: true } }
+      },
+      orderBy: { createdAt: "desc" }
+    });
+  } catch (error) {
+    console.error("Database error fetching campaign blogs:", error);
+  }
+
+  // Combine both sources, deduplicate by slug (DB takes priority for ratings)
+  const combinedMap = new Map();
+  
+  mdCampaigns.forEach(c => {
+    combinedMap.set(c.slug, {
+      ...c,
+      date: c.date,
+      rating: 0,
+      isExternal: false,
+      source: 'md'
+    });
   });
 
-  // Combine both and sort by date descending
-  const allBlogs = [ 
-    ...mdCampaigns.map(c => ({ ...c, isExternal: false })), 
-    ...dbCampaigns.map(p => ({
+  dbCampaigns.forEach(p => {
+    combinedMap.set(p.slug, {
       slug: p.slug,
       title: p.title,
       date: p.createdAt.toISOString(),
@@ -54,33 +76,66 @@ export default async function CampaignsPage() {
       image: p.image || "/images/placeholder.png",
       category: "Campaign",
       author: (p.author as any).name,
-      isExternal: false
-    }))
-  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      rating: p.comments.length > 0 
+        ? p.comments.reduce((acc: number, curr: { rating: number }) => acc + curr.rating, 0) / p.comments.length 
+        : 0,
+      isExternal: false,
+      source: p.content.startsWith('#') ? 'md' : 'db' // Heuristic
+    });
+  });
+
+  const allBlogs = Array.from(combinedMap.values()).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  
+  const displayedBlogs = allBlogs.slice(0, 3);
 
   // 3. Pamphlets
-  const pamphlets = (prisma as any).pamphlet 
-    ? await (prisma as any).pamphlet.findMany({
+  let pamphlets: any[] = [];
+  try {
+    if ((prisma as any).pamphlet) {
+      pamphlets = await (prisma as any).pamphlet.findMany({
         where: { active: true },
         orderBy: { createdAt: "desc" }
-      })
-    : [];
+      });
+    }
+  } catch (error) {
+    console.error("Database error fetching pamphlets:", error);
+  }
 
   // 4. Artvocacy
-  const artvocacy = (prisma as any).artvocacy 
-    ? await (prisma as any).artvocacy.findMany({
+  let artvocacy: any[] = [];
+  try {
+    if ((prisma as any).artvocacy) {
+      artvocacy = await (prisma as any).artvocacy.findMany({
         where: { active: true },
         orderBy: { createdAt: "desc" }
-      })
-    : [];
+      });
+    }
+  } catch (error) {
+    console.error("Database error fetching artvocacy:", error);
+  }
+
+  const featuredCampaign = allBlogs[0];
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50/30">
+    <div className="flex flex-col min-h-screen bg-slate-50/30 font-outfit">
       <Hero 
-        title="Our Campaigns"
-        subtitle="Exploring global climate narratives and youth-led advocacy through impactful storytelling."
-        backgroundImage="/images/1.png"
-      />
+        title={featuredCampaign?.title || "Our Campaigns"}
+        subtitle={featuredCampaign ? featuredCampaign.excerpt : "Exploring global climate narratives and youth-led advocacy through impactful storytelling."}
+        backgroundImage={featuredCampaign?.image || "/images/1.png"}
+        height="half"
+        titleSize="lg"
+      >
+         {featuredCampaign && (
+            <div className="mt-8 flex justify-center">
+               <Link 
+                href={`/campaigns/${featuredCampaign.slug}`}
+                className="group flex items-center gap-3 px-8 py-4 bg-brand-forest text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-brand-orange transition-all shadow-2xl hover:-translate-y-1 active:scale-95"
+               >
+                 Explore Featured Campaign <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+               </Link>
+            </div>
+         )}
+      </Hero>
 
       {/* Voice of the Frontline Section */}
       <section id="next-section" className="section-padding bg-white relative overflow-hidden">
@@ -116,10 +171,16 @@ export default async function CampaignsPage() {
               </h2>
               <p className="mt-4 text-slate-500 font-medium max-w-xl">Deep dives into our recent advocacy efforts, community engagements, and climate actions.</p>
             </div>
+            <Link 
+              href="/campaigns/all" 
+              className="flex items-center gap-2 px-8 py-4 bg-brand-forest text-white rounded-2xl font-bold text-sm hover:bg-brand-dark transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 active:scale-95"
+            >
+              View All Campaigns <ArrowRight size={18} />
+            </Link>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {allBlogs.map((blog: any, idx) => (
+            {displayedBlogs.map((blog: any, idx) => (
               <Link 
                 key={idx} 
                 href={blog.isExternal ? blog.slug : `/campaigns/${blog.slug}`}
@@ -142,7 +203,13 @@ export default async function CampaignsPage() {
                   <div className="flex items-center gap-2 mb-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     <span>{new Date(blog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                     <span>•</span>
-                    <span>By {blog.author}</span>
+                      <span>By {blog.author}</span>
+                    {blog.rating > 0 && (
+                      <div className="flex items-center gap-1.5 text-amber-500 bg-amber-50 px-3 py-1 rounded-full text-[10px] font-black w-fit">
+                        <Star className="h-3 w-3 fill-amber-500" />
+                        {Number(blog.rating).toFixed(1)}
+                      </div>
+                    )}
                   </div>
                   <h3 className="text-xl font-black text-slate-900 mb-4 group-hover:text-brand-orange transition-colors line-clamp-2 leading-tight">
                     {blog.title}

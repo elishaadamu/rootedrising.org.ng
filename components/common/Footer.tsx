@@ -87,8 +87,10 @@ export default function Footer() {
         <div className="mb-20 pb-16 border-b border-slate-800/50">
           <div className="grid lg:grid-cols-2 items-center gap-12 max-w-5xl mx-auto text-center lg:text-left">
             <div>
-              <h2 className="text-3xl font-extrabold text-white mb-4 tracking-tight">Stay informed with <span className="text-brand-orange">Rooted Rising</span></h2>
-              <p className="text-slate-400 font-medium leading-relaxed">Join our global network to receive localized perspectives, research field notes, and community impact stories.</p>
+              <h2 className="text-3xl font-extrabold text-white mb-4 tracking-tight">Rooted in Truth, <br/><span className="text-brand-orange">Rising for Justice</span></h2>
+              <p className="text-slate-400 font-medium leading-relaxed text-sm">
+                Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality. Get the latest climate insights and impact stories delivered straight to your inbox.
+              </p>
             </div>
             <form onSubmit={handleSubscribe} className="relative group max-w-md w-full mx-auto lg:ml-auto lg:mr-0">
               <div className="relative">
@@ -135,7 +137,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="mb-10 text-base leading-relaxed text-slate-400 max-w-xs">
-              Translating global climate and development goals into community-level action through technology, data, and youth leadership.
+              Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (

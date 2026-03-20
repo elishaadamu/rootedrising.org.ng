@@ -6,6 +6,7 @@ import CommentSection from "@/components/blog/CommentSection";
 import ShareButtons from "@/components/blog/ShareButtons";
 import { BlogSidebar } from "@/components/blog/BlogComponents";
 import { getSession } from "@/lib/actions/auth";
+import { getBlogCategoriesWithCount } from "@/lib/actions/blog";
 import { Calendar, User as UserIcon, Star } from "lucide-react";
 import Link from "next/link";
 
@@ -17,7 +18,10 @@ export default async function DynamicBlogPostPage(props: {
 
   if (!slug) return notFound();
 
-  const session = await getSession();
+  const [session, categoryStats] = await Promise.all([
+    getSession(),
+    getBlogCategoriesWithCount()
+  ]);
 
   // 1. Fetch from Database for Recent
   const dbRecent = await prisma.post.findMany({
@@ -170,7 +174,7 @@ export default async function DynamicBlogPostPage(props: {
             {/* Sidebar */}
             <div className="lg:col-span-4">
                <div className="sticky top-32">
-                  <BlogSidebar recentPosts={recentPosts} />
+                   <BlogSidebar recentPosts={recentPosts} categories={categoryStats} />
                </div>
             </div>
           </div>

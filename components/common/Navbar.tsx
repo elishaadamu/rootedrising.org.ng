@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight, User as UserIcon, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getSession, logout } from "@/lib/actions/auth";
+import { getBlogCategories } from "@/lib/actions/blog";
+
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -22,16 +24,20 @@ export default function Navbar() {
   const [blogDropdownOpen, setBlogDropdownOpen] = useState(false);
   const [mobileBlogOpen, setMobileBlogOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
+  const [categories, setCategories] = useState<string[]>([]);
   const pathname = usePathname();
+
   const router = useRouter();
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const s = await getSession();
+    const fetchData = async () => {
+      const [s, cats] = await Promise.all([getSession(), getBlogCategories()]);
       setSession(s);
+      setCategories(cats);
     };
-    fetchSession();
+    fetchData();
   }, [pathname]);
+
 
   const handleLogout = async () => {
     await logout();
@@ -91,7 +97,7 @@ export default function Navbar() {
                   <button
                     className={cn(
                       "flex items-center gap-1 text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
-                      pathname.startsWith("/blog") ? "text-brand-orange" : "text-white/80 hover:text-white"
+                      pathname.startsWith("/blogs") ? "text-brand-orange" : "text-white/80 hover:text-white"
                     )}
                   >
                     {link.name}
@@ -106,18 +112,15 @@ export default function Navbar() {
                         exit={{ opacity: 0, y: 10 }}
                         className="absolute left-0 mt-2 w-48 overflow-hidden rounded-2xl bg-slate-900 border border-white/10 shadow-2xl p-2 z-[60]"
                       >
-                         <Link 
-                           href="/blogs/articles"
-                           className="block w-full text-left p-3 rounded-xl text-xs font-black text-white/70 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest"
-                         >
-                            Articles
-                         </Link>
-                         <Link 
-                           href="/blogs/poems"
-                           className="block w-full text-left p-3 rounded-xl text-xs font-black text-white/70 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest"
-                         >
-                            Poems
-                         </Link>
+                         {categories.map((cat) => (
+                           <Link 
+                             key={cat}
+                             href={`/blogs/${cat.toLowerCase()}`}
+                             className="block w-full text-left p-3 rounded-xl text-xs font-black text-white/70 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest"
+                           >
+                              {cat}
+                           </Link>
+                         ))}
                          <div className="h-px bg-white/5 my-1 mx-2"></div>
                          <Link 
                            href="/blogs"
@@ -128,6 +131,7 @@ export default function Navbar() {
                       </motion.div>
                     )}
                   </AnimatePresence>
+
                 </div>
               );
             }
@@ -233,7 +237,7 @@ export default function Navbar() {
                         onClick={() => setMobileBlogOpen(!mobileBlogOpen)}
                         className={cn(
                           "flex items-center justify-between p-4 rounded-2xl text-base font-black transition-all uppercase tracking-widest",
-                          pathname.startsWith("/blog") ? "bg-white/10 text-brand-orange" : "text-white/80 hover:bg-white/5"
+                          pathname.startsWith("/blogs") ? "bg-white/10 text-brand-orange" : "text-white/80 hover:bg-white/5"
                         )}
                       >
                         {link.name}
@@ -247,20 +251,16 @@ export default function Navbar() {
                             exit={{ height: 0, opacity: 0 }}
                             className="overflow-hidden flex flex-col pl-6"
                           >
-                            <Link
-                              href="/blogs/articles"
-                              className="p-4 text-sm font-bold text-white/60 hover:text-white uppercase tracking-widest"
-                              onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
-                            >
-                              Articles
-                            </Link>
-                            <Link
-                              href="/blogs/poems"
-                              className="p-4 text-sm font-bold text-white/60 hover:text-white uppercase tracking-widest"
-                              onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
-                            >
-                              Poems
-                            </Link>
+                            {categories.map((cat) => (
+                              <Link
+                                key={cat}
+                                href={`/blogs/${cat.toLowerCase()}`}
+                                className="p-4 text-sm font-bold text-white/60 hover:text-white uppercase tracking-widest"
+                                onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
+                              >
+                                {cat}
+                              </Link>
+                            ))}
                             <Link
                               href="/blogs"
                               className="p-4 text-sm font-bold text-brand-orange/60 hover:text-brand-orange uppercase tracking-widest"
@@ -271,6 +271,7 @@ export default function Navbar() {
                           </motion.div>
                         )}
                       </AnimatePresence>
+
                     </div>
                   );
                 }

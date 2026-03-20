@@ -2,34 +2,49 @@ import nodemailer from "nodemailer";
 import path from "path";
 import fs from "fs";
 
-export async function sendEmail({ to, subject, html, attachments = [] }: { 
-  to: string; 
+/**
+ * Initialize Nodemailer transport for ZeptoMail
+ */
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || "smtp.zeptomail.com",
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: process.env.SMTP_SECURE === "true", // usually false for 587
+  auth: {
+    user: process.env.SMTP_USER || "emailapikey",
+    pass: process.env.SMTP_PASS || process.env.ZEPTOMAIL_TOKEN || "",
+  },
+});
+
+export async function sendEmail({ 
+  to, 
+  subject, 
+  html, 
+  attachments = [] 
+}: { 
+  to: string | string[]; 
   subject: string; 
   html: string;
   attachments?: any[];
 }) {
   try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.zeptomail.com",
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: process.env.SMTP_USER || "emailapikey",
-        pass: process.env.SMTP_PASS || process.env.ZEPTOMAIL_TOKEN || "",
-      },
-    });
+    const fromAddress = process.env.ZEPTOMAIL_FROM_ADDRESS || process.env.SMTP_FROM || "noreply@rootedrising.org.ng";
+    const fromName = process.env.ZEPTOMAIL_FROM_NAME || "Rooted Rising Initiative";
 
+    // Standardize 'to' for Nodemailer (can be a comma separated string or array)
+    const recipients = Array.isArray(to) ? to.join(",") : to;
+
+    // Handle branding logo
     const logoPath = path.join(process.cwd(), "public", "images", "logo.png");
     let logoBase64 = "";
     try {
       logoBase64 = fs.readFileSync(logoPath, { encoding: 'base64' });
     } catch (e) {
-      console.warn("Could not load logo for email:", e);
+      // Silently fail if logo cannot be loaded
     }
 
     // Prepare attachments for nodemailer
     const mailAttachments = [
-      ...(logoBase64 ? [{
+      ...(logoBase64 && html.includes("cid:logo") ? [{
         filename: 'logo.png',
         content: logoBase64,
         encoding: 'base64',
@@ -44,8 +59,8 @@ export async function sendEmail({ to, subject, html, attachments = [] }: {
     ];
 
     const mailOptions = {
-      from: `"${process.env.ZEPTOMAIL_FROM_NAME || 'Example Team'}" <${process.env.SMTP_FROM || 'noreply@rootedrising.org.ng'}>`,
-      to,
+      from: `"${fromName}" <${fromAddress}>`,
+      to: recipients,
       subject,
       html,
       attachments: mailAttachments
@@ -55,8 +70,43 @@ export async function sendEmail({ to, subject, html, attachments = [] }: {
 
     return { success: true, data: info };
   } catch (error) {
-    console.error("Email send error:", error);
+    console.error("Email delivery error:", error);
     return { success: false, error };
   }
 }
 
+/**
+ * Convenience method for newsletter bulk sending using SMTP
+ */
+export async function sendBulkEmail({
+  emails,
+  subject,
+  html
+}: {
+  emails: string[];
+  subject: string;
+  html: string;
+}) {
+  // SMTP usually prefers individual sends or specific headers for bulk
+  // We'll chunk to avoid overwhelming the connection or hitting rate limits
+  const CHUNK_SIZE = 50; 
+  let successCount = 0;
+  
+  for (let i = 0; i < emails.length; i += CHUNK_SIZE) {
+    const chunk = emails.slice(i, i + CHUNK_SIZE);
+    
+    // For SMTP, sending many individual emails in parallel is often faster
+    const promises = chunk.map(email => 
+      sendEmail({
+        to: email,
+        subject,
+        html
+      })
+    );
+    
+    const results = await Promise.all(promises);
+    successCount += results.filter(r => r.success).length;
+  }
+  
+  return { success: true, count: successCount };
+}
