@@ -23,10 +23,10 @@ import { toast } from "sonner";
 const footerLinks = {
   navigation: [
     { name: "Home", href: "/" },
+    { name: "Campaigns", href: "/campaigns" },
     { name: "About Us", href: "/about" },
-    { name: "Our Pillars", href: "/#our-pillars" },
-    { name: "Opportunities", href: "/opportunities" },
-    { name: "Impact stories", href: "/blog" },
+    { name: "Blogs", href: "/blogs" },
+    { name: "Contact Us", href: "/contact" },
   ],
   pillars: [
     { name: "Agriculture", href: "#" },
