@@ -9,6 +9,58 @@ import { getSession } from "@/lib/actions/auth";
 import { getBlogCategoriesWithCount } from "@/lib/actions/blog";
 import { Calendar, User as UserIcon, Star } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from 'next';
+
+export async function generateMetadata(props: { 
+  params: Promise<{ category: string, year: string, month: string, day: string, slug: string }> 
+}): Promise<Metadata> {
+  const { slug } = await props.params;
+  const mdPost = getPostBySlug(slug);
+  
+  if (mdPost) {
+    const description = mdPost.excerpt || mdPost.content.substring(0, 160).replace(/<[^>]*>?/gm, '');
+    return {
+      title: mdPost.title,
+      description,
+      openGraph: {
+        title: mdPost.title,
+        description,
+        images: mdPost.image ? [mdPost.image] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: mdPost.title,
+        description,
+        images: mdPost.image ? [mdPost.image] : [],
+      }
+    };
+  }
+
+  const dbPost = await prisma.post.findUnique({
+    where: { slug },
+  });
+
+  if (dbPost) {
+    const description = dbPost.excerpt || dbPost.content.substring(0, 160).replace(/<[^>]*>?/gm, '');
+    return {
+      title: dbPost.title,
+      description,
+      openGraph: {
+        title: dbPost.title,
+        description,
+        images: dbPost.image ? [dbPost.image] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: dbPost.title,
+        description,
+        images: dbPost.image ? [dbPost.image] : [],
+      }
+    };
+  }
+
+  return { title: 'Post Not Found' };
+}
 
 export default async function DynamicBlogPostPage(props: { 
   params: Promise<{ category: string, year: string, month: string, day: string, slug: string }> 

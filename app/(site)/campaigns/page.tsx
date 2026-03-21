@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Hero from "@/components/common/Hero";
 import VideoCard from "@/components/common/VideoCard";
 import prisma from "@/lib/prisma";
@@ -5,6 +6,16 @@ import { getAllCampaigns } from "@/lib/campaigns";
 import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink, ArrowRight, Star } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Our Campaigns",
+  description: "Explore Rooted Rising's ongoing advocacy initiatives, from climate resilience programs to gender justice storytelling across Sub-Saharan Africa.",
+  openGraph: {
+    title: "Rooted Rising Campaigns | Advocacy for Justice",
+    description: "Amplify voices, drive change, and join our latest movements for a sustainable future.",
+    images: ["/images/hero.png"],
+  },
+};
 
 export const dynamic = "force-dynamic";
 

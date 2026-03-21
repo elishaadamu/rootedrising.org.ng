@@ -9,9 +9,55 @@ import ClientWrappers from "@/components/common/ClientWrappers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Rooted Rising Initiative | Roots of Resilience, Rising for our Future",
-  description: "A youth-led organization advancing climate resilience, humanitarian response, and sustainable development in underserved and rural communities.",
-  keywords: ["Climate Resilience", "Sustainability", "Rural Development", "Youth Leadership", "Climate Tech", "Humanitarian Response"],
+  title: {
+    default: "Rooted Rising | Rooted in Truth, Rising for Justice",
+    template: "%s | Rooted Rising"
+  },
+  description: "Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality across Sub-Saharan Africa.",
+  keywords: ["Climate Resilience", "Sustainability", "Rural Development", "Youth Leadership", "Climate Tech", "Humanitarian Response", "Media Advocacy", "Storytelling", "Gender Equality", "Africa"],
+  authors: [{ name: "Rooted Rising Initiative" }],
+  creator: "Rooted Rising Initiative",
+  publisher: "Rooted Rising Initiative",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'),
+  openGraph: {
+    title: "Rooted Rising | Rooted in Truth, Rising for Justice",
+    description: "Harnessing storytelling, art, and grassroots activism for climate action and gender equality.",
+    url: 'https://rootedrising.org.ng',
+    siteName: 'Rooted Rising',
+    images: [
+      {
+        url: '/images/hero.png',
+        width: 1200,
+        height: 630,
+        alt: 'Rooted Rising Initiative - Media Advocacy for Climate Justice',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Rooted Rising | Rooted in Truth, Rising for Justice',
+    description: 'Harnessing storytelling, art, and grassroots activism for climate action and gender equality.',
+    images: ['/images/hero.png'],
+    creator: '@rootedrising',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   verification: {
     google: "c-8xdO0w7t0pIYjsoQz6LDS0lUpb6veGwx92Hrua1DA",
   },

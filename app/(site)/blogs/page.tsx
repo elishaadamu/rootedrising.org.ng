@@ -1,4 +1,15 @@
+import { Metadata } from "next";
 import Hero from "@/components/common/Hero";
+
+export const metadata: Metadata = {
+  title: "Blog & Perspectives",
+  description: "Dive into our collection of research, stories, and impacts from frontline communities. We use storytelling to ignite climate action and gender equality.",
+  openGraph: {
+    title: "Rooted Rising Blog | Stories for Change",
+    description: "Read our latest insights and narratives from the field.",
+    images: ["/images/hero.png"],
+  },
+};
 import { BlogCard } from "@/components/blog/BlogComponents";
 import prisma from "@/lib/prisma";
 import { getAllPosts } from "@/lib/blog";
