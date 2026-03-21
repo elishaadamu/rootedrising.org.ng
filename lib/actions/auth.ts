@@ -47,7 +47,7 @@ export async function signup(formData: FormData) {
         name,
         email,
         password: hashedPassword,
-        role: "ADMIN" // First user should be admin or set based on your logic
+        role: "USER" // Default role for new signups
       },
     });
 

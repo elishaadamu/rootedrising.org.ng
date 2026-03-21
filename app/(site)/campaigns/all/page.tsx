@@ -19,7 +19,10 @@ export default async function AllCampaignsPage(props: {
   let dbCampaigns: any[] = [];
   try {
     dbCampaigns = await prisma.post.findMany({
-      where: { section: "Campaign", published: true },
+      where: { 
+        section: { in: ["Campaign", "Campaigns", "campaign"] },
+        published: true 
+      },
       include: { 
         author: true,
         comments: { select: { rating: true } }
@@ -54,7 +57,7 @@ export default async function AllCampaignsPage(props: {
       excerpt: p.excerpt || "",
       image: p.image || "/images/placeholder.png",
       category: "Campaign",
-      author: (p.author as any).name,
+      author: (p.author as any)?.name || "Rooted Rising",
       rating: p.comments.length > 0 
         ? p.comments.reduce((acc: number, curr: { rating: number }) => acc + curr.rating, 0) / p.comments.length 
         : 0,
@@ -84,7 +87,7 @@ export default async function AllCampaignsPage(props: {
          {featuredCampaign && (
             <div className="mt-8 flex justify-center">
                <Link 
-                href={`/campaigns/${featuredCampaign.slug}`}
+                href={`/campaigns/${new Date(featuredCampaign.date).getFullYear()}/${String(new Date(featuredCampaign.date).getMonth() + 1).padStart(2, '0')}/${String(new Date(featuredCampaign.date).getDate()).padStart(2, '0')}/${featuredCampaign.slug}`}
                 className="group flex items-center gap-3 px-8 py-4 bg-brand-forest text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-brand-orange transition-all shadow-2xl hover:-translate-y-1 active:scale-95"
                >
                  Read Featured Archive <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -110,12 +113,19 @@ export default async function AllCampaignsPage(props: {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-20">
-            {displayedBlogs.map((blog: any, idx) => (
-              <Link 
-                key={idx} 
-                href={`/campaigns/${blog.slug}`}
-                className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col"
-              >
+            {displayedBlogs.map((blog: any, idx) => {
+              const d = new Date(blog.date);
+              const year = d.getFullYear();
+              const month = String(d.getMonth() + 1).padStart(2, '0');
+              const day = String(d.getDate()).padStart(2, '0');
+              const detailUrl = blog.isExternal ? blog.slug : `/campaigns/${year}/${month}/${day}/${blog.slug}`;
+              
+              return (
+                <Link 
+                  key={idx} 
+                  href={detailUrl}
+                  className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col"
+                >
                 <div className="relative h-64 overflow-hidden">
                   <Image 
                     src={blog.image} 
@@ -153,7 +163,8 @@ export default async function AllCampaignsPage(props: {
                   </div>
                 </div>
               </Link>
-            ))}
+            );
+          })}
           </div>
 
           {/* Pagination */}

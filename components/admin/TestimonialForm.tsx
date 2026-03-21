@@ -95,7 +95,7 @@ export default function TestimonialForm({ initialData, onSuccess, onCancel }: Te
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-forest/20 resize-none"
-              placeholder="What did they say about IREACT?"
+              placeholder="What did they say about Rooted Rising?"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">

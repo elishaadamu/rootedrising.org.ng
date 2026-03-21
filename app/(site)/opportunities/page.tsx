@@ -179,7 +179,7 @@ export default function OpportunitiesPage() {
                 Ready to take the first step towards impact? Submit your preliminary application today. We are looking for passion, vision, and a commitment to rural leadership.
               </p>
               <div className="inline-block glass-card p-10 rounded-3xl border-none">
-                <Link href="#" className="flex h-20 items-center justify-center rounded-2xl bg-brand-cyan text-slate-900 font-black text-2xl px-16 shadow-2xl transition-all hover:bg-white hover:text-brand-forest hover:-translate-y-2 uppercase tracking-wide">
+                <Link href="https://forms.gle/mkGvsk2jL9BqGSdX8" className="flex h-20 items-center justify-center rounded-2xl bg-brand-cyan text-slate-900 font-black text-2xl px-16 shadow-2xl transition-all hover:bg-white hover:text-brand-forest hover:-translate-y-2 uppercase tracking-wide">
                     Start Application
                 </Link>
               </div>
@@ -190,7 +190,7 @@ export default function OpportunitiesPage() {
         title="Still have questions?"
         subtitle="Download our full Information Pack or talk to one of our ambassadors."
         primaryButtonText="Download Info Pack"
-        primaryButtonHref="#"
+        primaryButtonHref="https://forms.gle/mkGvsk2jL9BqGSdX8"
         secondaryButtonText="Chat with us"
         secondaryButtonHref="/contact"
         theme="sky"

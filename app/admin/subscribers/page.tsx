@@ -1,7 +1,14 @@
 import prisma from "@/lib/prisma";
 import SubscriberList from "@/components/admin/SubscriberList";
+import { getSession } from "@/lib/actions/auth";
+import { redirect } from "next/navigation";
 
 export default async function SubscribersPage() {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") {
+    redirect("/admin");
+  }
+
   const subscribers = await (prisma as any).newsletter.findMany({
     orderBy: { createdAt: 'desc' }
   });

@@ -2,11 +2,12 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Plus, Edit2, Eye, Calendar, User, FileText } from "lucide-react";
 import DeletePostButton from "@/components/admin/DeletePostButton";
+import SyncMarkdownButton from "@/components/admin/SyncMarkdownButton";
 
 export default async function AdminBlog() {
   const posts = await prisma.post.findMany({
     where: {
-      section: { not: "Campaign" }
+      section: { notIn: ["Campaigns", "Campaign", "campaign"] }
     },
     include: { author: true },
     orderBy: { createdAt: "desc" },
@@ -19,13 +20,16 @@ export default async function AdminBlog() {
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">Blog Stories</h2>
           <p className="text-sm sm:text-base text-slate-500 font-medium">Manage and publish impact stories.</p>
         </div>
-        <Link 
-          href="/admin/blog/new"
-          className="flex items-center justify-center gap-2 rounded-2xl bg-brand-forest px-6 py-3.5 sm:px-8 sm:py-4 text-sm font-bold text-white shadow-xl shadow-forest-500/10 transition-all hover:bg-brand-dark hover:-translate-y-1 active:scale-95 w-full sm:w-auto"
-        >
-          <Plus size={18} />
-          Create New Story
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <SyncMarkdownButton />
+          <Link 
+            href="/admin/blog/new"
+            className="flex items-center justify-center gap-2 rounded-2xl bg-brand-forest px-6 py-3.5 sm:px-8 sm:py-4 text-sm font-bold text-white shadow-xl shadow-forest-500/10 transition-all hover:bg-brand-dark hover:-translate-y-1 active:scale-95 w-full sm:w-auto"
+          >
+            <Plus size={18} />
+            Create New Story
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

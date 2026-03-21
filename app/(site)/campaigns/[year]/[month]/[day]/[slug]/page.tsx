@@ -9,16 +9,23 @@ import ShareButtons from "@/components/blog/ShareButtons";
 import CommentSection from "@/components/blog/CommentSection";
 import { getSession } from "@/lib/actions/auth";
 
-export default async function CampaignDetailPage(props: { params: Promise<{ slug: string }> }) {
+export default async function CampaignDetailPage(props: {
+  params: Promise<{
+    year: string;
+    month: string;
+    day: string;
+    slug: string;
+  }>;
+}) {
   const { slug } = await props.params;
 
   if (!slug) return notFound();
 
   const session = await getSession();
 
-  // Fetch or setup campaign from DB if possible
+  // 1. Fetch from Database
   let campaign: any = await prisma.post.findUnique({
-    where: { slug, section: "Campaign" },
+    where: { slug, published: true },
     include: { 
       author: true,
       comments: {
@@ -31,14 +38,13 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
   let isMarkdown = false;
   let markdownContent = "";
 
+  // 2. Fallback to Markdown
   if (!campaign) {
     const mdCampaign = getCampaignBySlug(slug);
     if (!mdCampaign) return notFound();
     
     // Setup shadow post if it doesn't exist for comments
-    // Fetch an admin user to be the owner/author of shadow posts
     const adminUser = await prisma.user.findFirst({ where: { role: "ADMIN" } });
-    
     if (adminUser) {
       try {
         campaign = await prisma.post.create({
@@ -48,7 +54,7 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
             content: mdCampaign.content,
             excerpt: mdCampaign.excerpt,
             image: mdCampaign.image,
-            section: "Campaign",
+            section: "Campaigns",
             published: true,
             authorId: adminUser.id,
           },
@@ -61,7 +67,6 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
           }
         });
       } catch (err) {
-        // Fallback to pure MD object if DB creation fails
         campaign = { ...mdCampaign, comments: [] };
       }
     } else {
@@ -104,25 +109,24 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
       <div className="section-padding bg-white relative">
         <div className="mx-auto max-w-4xl">
            <Link 
-            href="/campaigns" 
+            href="/campaigns/all" 
             className="inline-flex items-center gap-2 text-slate-400 font-bold text-sm mb-12 hover:text-brand-orange transition-colors group"
            >
              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
              Back to Campaigns
            </Link>
 
-          {/* Meta */}
           <div className="flex flex-wrap items-center gap-8 mb-16 py-8 border-y border-slate-100">
              <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
                    <Calendar size={18} />
-                </div>
-                <div>
-                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Date</p>
-                   <p className="text-sm font-black text-slate-900">
-                    {new Date(isMarkdown ? campaign.date : campaign.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}
-                   </p>
-                </div>
+                 </div>
+                 <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Date</p>
+                    <p className="text-sm font-black text-slate-900">
+                     {new Date(isMarkdown ? campaign.date : campaign.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}
+                    </p>
+                 </div>
              </div>
 
              <div className="h-8 border-l border-slate-100"></div>
@@ -134,7 +138,7 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
                 <div>
                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Contributor</p>
                    <p className="text-sm font-black text-slate-900">
-                    {isMarkdown ? (campaign.author || "Rooted Rising") : campaign.author.name}
+                    {isMarkdown ? (campaign.author || "Rooted Rising") : (campaign.author?.name || "Rooted Rising")}
                    </p>
                 </div>
              </div>
@@ -142,11 +146,10 @@ export default async function CampaignDetailPage(props: { params: Promise<{ slug
              <div className="h-8 border-l border-slate-100 hidden sm:block"></div>
 
              <div className="flex-1 flex justify-end">
-               <ShareButtons title={campaign.title} slug={slug} />
+               <ShareButtons title={campaign.title} slug={`${await props.params.then(p => `${p.year}/${p.month}/${p.day}/${p.slug}`)}`} />
              </div>
           </div>
 
-          {/* Content */}
           <div className="prose prose-base sm:prose-lg md:prose-xl prose-slate max-w-none wrap-break-word overflow-hidden
             prose-headings:text-slate-900 prose-headings:font-black 
             prose-p:text-slate-600 prose-p:leading-relaxed prose-p:font-medium

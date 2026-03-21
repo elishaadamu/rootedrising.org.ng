@@ -12,6 +12,8 @@ function createExcerpt(htmlContent: string, maxLength: number = 150) {
   return plainText.substring(0, plainText.lastIndexOf(" ", maxLength)) + "...";
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function CategoryListingPage({
   params,
   searchParams,
@@ -30,7 +32,7 @@ export default async function CategoryListingPage({
   const dbPosts = await prisma.post.findMany({
     where: { 
       published: true,
-      section: category
+      section: { equals: category, mode: "insensitive" }
     },
     include: { 
       author: true,
@@ -61,7 +63,7 @@ export default async function CategoryListingPage({
   ].sort((a, b) => new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime());
 
   const featuredPost = posts[0];
-  const allGridPosts = posts.slice(1);
+  const allGridPosts = posts; // Don't slice, show everything in the grid
   
   const totalPages = Math.ceil(allGridPosts.length / ITEMS_PER_PAGE);
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -108,7 +110,7 @@ export default async function CategoryListingPage({
                 <BlogCard key={post.slug} post={{
                   ...post,
                   date: new Date(post.createdAt).toISOString(),
-                  author: post.author.name,
+                  author: post.author?.name || "Rooted Rising",
                   rating: avgRating,
                   category: post.section,
                   excerpt: createExcerpt(post.content)

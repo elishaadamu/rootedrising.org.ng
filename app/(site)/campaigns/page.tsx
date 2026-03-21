@@ -43,7 +43,10 @@ export default async function CampaignsPage() {
   let dbCampaigns: any[] = [];
   try {
     dbCampaigns = await prisma.post.findMany({
-      where: { section: "Campaign", published: true },
+      where: { 
+        section: { in: ["Campaign", "Campaigns", "campaign"] },
+        published: true 
+      },
       include: { 
         author: true,
         comments: { select: { rating: true } }
@@ -74,8 +77,8 @@ export default async function CampaignsPage() {
       date: p.createdAt.toISOString(),
       excerpt: p.excerpt || "",
       image: p.image || "/images/placeholder.png",
-      category: "Campaign",
-      author: (p.author as any).name,
+      category: "Campaigns",
+      author: (p.author as any)?.name || "Rooted Rising",
       rating: p.comments.length > 0 
         ? p.comments.reduce((acc: number, curr: { rating: number }) => acc + curr.rating, 0) / p.comments.length 
         : 0,
@@ -128,7 +131,7 @@ export default async function CampaignsPage() {
          {featuredCampaign && (
             <div className="mt-8 flex justify-center">
                <Link 
-                href={`/campaigns/${featuredCampaign.slug}`}
+                href={`/campaigns/${new Date(featuredCampaign.date).getFullYear()}/${String(new Date(featuredCampaign.date).getMonth() + 1).padStart(2, '0')}/${String(new Date(featuredCampaign.date).getDate()).padStart(2, '0')}/${featuredCampaign.slug}`}
                 className="group flex items-center gap-3 px-8 py-4 bg-brand-forest text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-brand-orange transition-all shadow-2xl hover:-translate-y-1 active:scale-95"
                >
                  Explore Featured Campaign <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -148,15 +151,17 @@ export default async function CampaignsPage() {
             <p className="mt-6 text-slate-500 max-w-2xl mx-auto font-medium">Documenting the lived experiences of communities at the forefront of the climate crisis through visual storytelling.</p>
           </div>
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-            {videos.map((video: any, idx: number) => (
-              <VideoCard 
-                key={idx}
-                title={video.title}
-                videoUrl={video.link}
-                index={idx}
-                aspect="square"
-              />
-            ))}
+            {videos.map((video: any, idx: number) => {
+              return (
+                <VideoCard 
+                  key={idx}
+                  title={video.title}
+                  videoUrl={video.link}
+                  index={idx}
+                  aspect="square"
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -180,12 +185,19 @@ export default async function CampaignsPage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {displayedBlogs.map((blog: any, idx) => (
-              <Link 
-                key={idx} 
-                href={blog.isExternal ? blog.slug : `/campaigns/${blog.slug}`}
-                className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col"
-              >
+            {displayedBlogs.map((blog: any, idx) => {
+              const d = new Date(blog.date);
+              const year = d.getFullYear();
+              const month = String(d.getMonth() + 1).padStart(2, '0');
+              const day = String(d.getDate()).padStart(2, '0');
+              const detailUrl = blog.isExternal ? blog.slug : `/campaigns/${year}/${month}/${day}/${blog.slug}`;
+              
+              return (
+                <Link 
+                  key={idx} 
+                  href={detailUrl}
+                  className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col"
+                >
                 <div className="relative h-64 overflow-hidden">
                   <Image 
                     src={blog.image} 
@@ -221,38 +233,65 @@ export default async function CampaignsPage() {
                     Read Full Story
                     <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1" />
                   </div>
-                </div>
-              </Link>
-            ))}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Pamphlets Section */}
       {pamphlets.length > 0 && (
-        <section className="section-padding bg-slate-50 overflow-hidden">
-          <div className="mx-auto max-w-7xl px-6">
-            <h2 className="text-4xl font-black text-brand-navy mb-16">Pamphlets</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <section className="section-padding bg-slate-50 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_120%,rgba(218,142,31,0.05),transparent)] pointer-events-none"></div>
+          <div className="mx-auto max-w-7xl px-6 relative z-10">
+             <div className="text-center mb-20">
+               <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight uppercase tracking-tight">
+                 Advocacy <span className="text-brand-orange">Resources</span>
+               </h2>
+               <div className="mt-4 h-1.5 w-24 bg-brand-orange mx-auto rounded-full"></div>
+               <p className="mt-6 text-slate-500 font-medium max-w-xl mx-auto italic">Explore our educational toolkits, community guides, and climate action pamphlets.</p>
+             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-12">
               {pamphlets.map((p: any, idx: number) => (
-                <Link key={idx} href={p.url || "#"} target="_blank" className="group relative aspect-[3/4] rounded-4xl overflow-hidden shadow-2xl transition-all duration-700 hover:-translate-y-2">
+                <Link 
+                 key={idx} 
+                 href={p.url || "#"} 
+                 target="_blank" 
+                 className="group relative aspect-3/4 rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_45px_100px_-20px_rgba(26,35,62,0.3)] perspective-1000"
+                >
                   <Image 
                     src={p.image || "/images/placeholder.png"} 
                     alt={p.title} 
                     fill 
-                    className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-brand-navy/60 transition-opacity duration-500 group-hover:bg-brand-navy/70 p-6 sm:p-8">
-                    <div className="border border-white/40 w-full h-full flex flex-col items-center justify-center p-4 sm:p-8 text-center relative">
-                        <div className="text-white text-[13px] sm:text-sm font-medium leading-relaxed mb-8 opacity-90 transition-all duration-500 group-hover:opacity-100 group-hover:scale-105" dangerouslySetInnerHTML={{ __html: p.content }}></div>
-                        <div className="w-16 h-px bg-white/30 mb-6"></div>
-                        <h3 className="text-white font-black text-lg sm:text-2xl uppercase tracking-[0.2em] leading-tight">{p.title}</h3>
-                        
-                        {/* Decorative Corner */}
-                        <div className="absolute bottom-4 right-4 h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden bg-white/90 backdrop-blur-md p-2 shadow-xl border border-white/20">
-                           <Image src="/images/logo.png" alt="Logo" width={40} height={40} className="object-contain" />
+                  <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-900/40 to-slate-900/90 group-hover:to-slate-900/95 transition-all duration-500"></div>
+
+                  {/* Glass Content Card */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center opacity-0 group-hover:opacity-100 transition-all duration-50 translate-y-10 group-hover:translate-y-0">
+                     <div className="w-full h-full border border-white/20 backdrop-blur-sm bg-white/5 rounded-4xl p-8 flex flex-col items-center justify-center relative overflow-hidden group/inner">
+                        <div className="absolute top-0 right-0 p-6 opacity-40 group-hover/inner:opacity-100 transition-opacity">
+                           <Image src="/images/logo.png" alt="Logo" width={32} height={32} className="grayscale brightness-200" />
                         </div>
-                    </div>
+                        <div className="text-white text-sm sm:text-base font-medium leading-relaxed mb-6 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100 line-clamp-6" dangerouslySetInnerHTML={{ __html: p.content }}></div>
+                        <div className="w-12 h-0.5 bg-brand-orange/60 mb-6"></div>
+                        <div className="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-brand-navy rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl transform transition-transform duration-500 delay-200">
+                           View Resource
+                           <ExternalLink size={14} className="text-brand-orange" />
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 w-full p-8 transition-opacity duration-500 group-hover:opacity-0">
+                     <span className="inline-block px-3 py-1 bg-brand-orange text-white text-[9px] font-black uppercase tracking-widest rounded-lg mb-4 shadow-lg">
+                       Educational Resource
+                     </span>
+                     <h3 className="text-white font-black text-2xl sm:text-3xl leading-tight drop-shadow-lg uppercase tracking-tight">
+                       {p.title}
+                     </h3>
                   </div>
                 </Link>
               ))}
@@ -270,13 +309,24 @@ export default async function CampaignsPage() {
             </div>
             
             <div className="relative aspect-video w-full rounded-4xl overflow-hidden shadow-2xl border border-slate-100 bg-slate-900 group">
-              <iframe
-                src={`${artvocacy[0].url}${artvocacy[0].url.includes('?') ? '&' : '?'}rel=0&autoplay=0`}
-                title="Artvocacy Highlight"
-                className="absolute inset-0 h-full w-full opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              {(() => {
+                const getEmbedUrl = (url: string) => {
+                  if (!url) return "";
+                  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+                  const match = url.match(regExp);
+                  const videoId = (match && match[2].length === 11) ? match[2] : null;
+                  return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=0` : url;
+                };
+                return (
+                  <iframe
+                    src={getEmbedUrl(artvocacy[0].url)}
+                    title="Artvocacy Highlight"
+                    className="absolute inset-0 h-full w-full opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                );
+              })()}
             </div>
             <div className="mt-8 flex items-center justify-between">
                <div>

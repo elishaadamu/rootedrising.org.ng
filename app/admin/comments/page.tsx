@@ -9,7 +9,15 @@ import {
 } from "lucide-react";
 import DeleteCommentButton from "@/components/admin/DeleteCommentButton";
 
+import { getSession } from "@/lib/actions/auth";
+import { redirect } from "next/navigation";
+
 export default async function AdminComments() {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") {
+    redirect("/admin");
+  }
+
   const comments = await prisma.comment.findMany({
     include: { 
       user: true,

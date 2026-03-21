@@ -44,7 +44,7 @@ export default function HighlightEditor({ initialData }: { initialData?: any }) 
     }
 
     startTransition(async () => {
-      const data = { title, excerpt, content, image, section: "Campaign", published: status };
+      const data = { title, excerpt, content, image, section: "Campaigns", published: status };
       const res = initialData?.id 
         ? await updateBlogPost(initialData.id, data)
         : await createBlogPost(data);
@@ -169,6 +169,15 @@ export default function HighlightEditor({ initialData }: { initialData?: any }) 
                     onChange={setContent}
                     placeholder="Deep dive into the campaign details here..."
                     className="flex-1 quill-editor-surface"
+                    modules={{
+                      toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                        [{'list': 'ordered'}, {'list': 'bullet'}],
+                        ['link', 'image', 'video'],
+                        ['clean']
+                      ],
+                    }}
                   />
                </section>
              </>

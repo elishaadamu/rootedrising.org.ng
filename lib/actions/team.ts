@@ -46,15 +46,15 @@ export async function createTeamMember(data: any) {
             name: data.name,
             email: data.email,
             password: hashedPassword,
-            role: "ADMIN",
+            role: "EDITOR",
           },
         });
-
-        // Send Welcome Email to the new Admin
+        
+        // Send Welcome Email to the new Editor
         try {
           await sendEmail({
             to: data.email,
-            subject: "Welcome to the Rooted Rising Admin Team! 🔐",
+            subject: "Welcome to the Rooted Rising Editorial Team! 🖋️",
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 24px; color: #1e293b; background-color: #ffffff;">
                 <div style="text-align: center; margin-bottom: 30px;">
@@ -62,12 +62,12 @@ export async function createTeamMember(data: any) {
                     <img src="cid:logo" alt="Rooted Rising Logo" style="height: 60px; margin-bottom: 20px; border: none;" />
                   </a>
                   <h1 style="color: #DA8E1F; margin: 0; font-size: 28px; font-weight: 900;">Rooted Rising Portal</h1>
-                  <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: 800; color: #64748b; margin-top: 5px;">Administrative Access Granted</p>
+                  <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: 800; color: #64748b; margin-top: 5px;">Editorial Access Granted</p>
                 </div>
                 
                 <div style="background-color: #f8fafc; padding: 25px; border-radius: 20px; margin-bottom: 30px;">
                   <h2 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-top: 0;">Welcome, ${data.name}!</h2>
-                  <p style="font-size: 15px; color: #475569; line-height: 1.6;">You have been added as a team member and granted administrative access to the Rooted Rising dashboard. You can now manage blog posts, team members, and site content.</p>
+                  <p style="font-size: 15px; color: #475569; line-height: 1.6;">You have been added as a team member and granted <strong>Editor</strong> access to the Rooted Rising dashboard. You can now manage blog posts, campaigns, artvocacy, and more.</p>
                 </div>
 
                 <div style="padding: 0 10px; margin-bottom: 30px;">

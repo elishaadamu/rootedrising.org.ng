@@ -65,23 +65,12 @@ export default function NotFound() {
                   className="relative"
                 >
                   <div className="p-8 md:p-12 rounded-full bg-white shadow-2xl shadow-brand-orange/20 border border-brand-orange/20">
-                    <motion.div
-                      animate={{ 
-                        rotate: [0, 10, -10, 0],
-                        y: [0, -5, 5, 0]
-                      }}
-                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                    >
+                    <div className="hover:scale-110 transition-transform">
                       <Compass size={80} className="text-brand-orange md:w-32 md:h-32" strokeWidth={1.5} />
-                    </motion.div>
+                    </div>
                   </div>
                   
-                  {/* Spinning Ring */}
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute -inset-4 border-2 border-dashed border-brand-orange/30 rounded-full"
-                  ></motion.div>
+                  <div className="absolute -inset-4 border-2 border-dashed border-brand-orange/30 rounded-full"></div>
                 </motion.div>
               </div>
             </div>

@@ -74,7 +74,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-slate-900 pt-16 pb-12 text-slate-300 overflow-hidden relative">
+    <footer className="bg-black pt-20 pb-12 text-slate-300 overflow-hidden relative border-t border-white/5">
       {/* Dotted Grid Background */}
       <div className="absolute inset-0 opacity-[0.06] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(circle, #ffffff 3px, transparent 3px)', backgroundSize: '30px 30px' }}>
@@ -118,19 +118,14 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="col-span-1">
             <Link href="/" className="mb-8 flex items-center group">
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                whileHover={{ scale: 1.1 }}
-                className="relative h-20 w-16 overflow-hidden rounded-xl"
-              >
+              <div className="relative h-20 w-16 overflow-hidden rounded-xl transition-transform hover:scale-110">
                 <Image
                   src="/images/logo.png"
                   alt="Rooted Rising Logo"
                   fill
                   className="object-contain"
                 />
-              </motion.div>
+              </div>
               <div className="ml-4">
                 <span className="block text-3xl font-black tracking-tight text-white leading-none">Rooted Rising</span>
                 <span className="text-sm font-bold uppercase tracking-[0.2em] text-brand-orange mt-1 block">Initiative</span>

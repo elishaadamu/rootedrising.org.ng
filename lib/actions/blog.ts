@@ -11,7 +11,7 @@ export async function getBlogCategories() {
   try {
     // 1. Get from Database
     const dbPosts = await prisma.post.findMany({
-      where: { published: true, section: { notIn: ["Campaign", "General"] } },
+      where: { published: true, section: { notIn: ["Campaigns", "General"] } },
       select: { section: true }
     });
     const dbCategories = Array.from(new Set(dbPosts.map(p => p.section)));
@@ -21,8 +21,13 @@ export async function getBlogCategories() {
     const mdCategories = Array.from(new Set(mdPosts.map(p => p.category)));
 
     // 3. Combine and filter
-    return Array.from(new Set([...dbCategories, ...mdCategories]))
-      .filter(Boolean)
+    const allCategories = Array.from(new Set([...dbCategories, ...mdCategories]))
+      .filter(Boolean);
+    
+    const standardCategories = ["Articles", "Poems", "Campaigns", "Story"];
+    
+    return allCategories
+      .filter(c => standardCategories.includes(c))
       .sort();
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -34,7 +39,7 @@ export async function getBlogCategoriesWithCount() {
   try {
     // 1. Get from Database
     const dbPosts = await prisma.post.findMany({
-      where: { published: true, section: { notIn: ["Campaign", "General"] } },
+      where: { published: true, section: { notIn: ["Campaigns", "General"] } },
       select: { section: true }
     });
     
@@ -52,12 +57,15 @@ export async function getBlogCategoriesWithCount() {
       counts[p.category] = (counts[p.category] || 0) + 1;
     });
     
-    // 4. Format for UI
-    return Object.entries(counts).map(([name, count]) => ({
-      name,
-      slug: name.toLowerCase(),
-      count
-    })).sort((a, b) => b.count - a.count);
+    // 4. Format for UI and filter for standard ones only
+    const standardSections = ["Articles", "Poems", "Campaigns", "Story"];
+    return Object.entries(counts)
+      .filter(([name]) => standardSections.includes(name))
+      .map(([name, count]) => ({
+        name,
+        slug: name.toLowerCase(),
+        count
+      })).sort((a, b) => b.count - a.count);
   } catch (error) {
     console.error("Error fetching categories with count:", error);
     return [];
@@ -72,7 +80,7 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
     return { error: "Unauthorized" };
   }
 
-  const { title, excerpt, content, image, section = "General", published = false } = data;
+  const { title, excerpt, content, image, section = "Story", published = false } = data;
 
   if (!title || !content) {
     return { error: "Title and content are required" };
@@ -185,6 +193,94 @@ export async function deletePost(id: string) {
     return { success: true };
   } catch (error) {
     return { error: "Error deleting post" };
+  }
+}
+
+export async function syncMarkdownPosts() {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") return { error: "Unauthorized" };
+
+  try {
+    const mdPosts = getAllPosts();
+    let syncedCount = 0;
+
+    for (const post of mdPosts) {
+      // Upsert based on slug
+      await prisma.post.upsert({
+        where: { slug: post.slug },
+        update: {
+          title: post.title,
+          content: post.content,
+          excerpt: post.excerpt,
+          image: post.image,
+          section: post.category,
+          updatedAt: new Date(post.date),
+        },
+        create: {
+          title: post.title,
+          content: post.content,
+          excerpt: post.excerpt,
+          image: post.image,
+          slug: post.slug,
+          section: post.category,
+          authorId: session.id as string,
+          published: true,
+          createdAt: new Date(post.date),
+        },
+      });
+      syncedCount++;
+    }
+
+    await recordActivity({
+      action: "UPDATED",
+      entity: "Post",
+      details: `Synced ${syncedCount} posts from markdown files to database.`
+    });
+
+    revalidatePath("/admin/blog");
+    revalidatePath("/blogs");
+    
+    return { success: true, count: syncedCount };
+  } catch (error) {
+    console.error("Sync error:", error);
+    return { error: "Failed to sync posts" };
+  }
+}
+
+export async function normalizeBlogSections() {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") return { error: "Unauthorized" };
+
+  try {
+    const mappings = [
+      { from: ["article", "Article", "Articles "], to: "Articles" },
+      { from: ["poem", "Poem", "Poems "], to: "Poems" },
+      { from: ["campaign", "Campaign", "Campaigns "], to: "Campaigns" },
+      { from: ["story", "story", "Story "], to: "Story" },
+    ];
+
+    let totalUpdated = 0;
+    for (const mapping of mappings) {
+      const result = await prisma.post.updateMany({
+        where: { section: { in: mapping.from } },
+        data: { section: mapping.to },
+      });
+      totalUpdated += result.count;
+    }
+
+    /* await recordActivity({
+      action: "UPDATED",
+      entity: "Post",
+      details: `Normalized sections for ${totalUpdated} posts in database.`
+    }); */
+
+    /* revalidatePath("/admin/blog");
+    revalidatePath("/blogs"); */
+    
+    return { success: true, count: totalUpdated };
+  } catch (error: any) {
+    console.error("DEBUG - Normalization error:", error);
+    return { error: "Failed to normalize sections: " + String(error) };
   }
 }
 

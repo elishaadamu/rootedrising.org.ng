@@ -25,7 +25,7 @@ export default async function DynamicBlogPostPage(props: {
 
   // 1. Fetch from Database for Recent
   const dbRecent = await prisma.post.findMany({
-    where: { published: true, section: { not: "Campaign" } },
+    where: { published: true, section: { not: "Campaigns" } },
     orderBy: { createdAt: "desc" },
     take: 3
   });

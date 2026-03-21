@@ -16,10 +16,14 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
+import { getSession } from "@/lib/actions/auth";
+import { redirect } from "next/navigation";
+
 export default function ActivityLogsPage() {
   const [logs, setLogs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const fetchLogs = async () => {
     setIsLoading(true);
@@ -31,8 +35,19 @@ export default function ActivityLogsPage() {
   };
 
   useEffect(() => {
-    fetchLogs();
+    async function checkAuth() {
+        const session = await getSession();
+        if (!session || session.role !== "ADMIN") {
+            redirect("/admin");
+        } else {
+            setIsAuthorized(true);
+            fetchLogs();
+        }
+    }
+    checkAuth();
   }, []);
+
+  if (isAuthorized === null) return null;
 
   const filteredLogs = logs.filter(log => 
     log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||

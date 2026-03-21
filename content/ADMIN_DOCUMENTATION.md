@@ -1,4 +1,4 @@
-# IREACT Admin Panel Documentation
+# Rooted Rising Initiative Admin Panel Documentation
 
 > **Version**: 1.0  
 > **Last Updated**: March 2026  

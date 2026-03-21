@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin/", "/api/"],
     },
-    sitemap: "https://ireactinitiative.org/sitemap.xml",
+    sitemap: "https://rootedrising.org.ng/sitemap.xml",
   };
 }

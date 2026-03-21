@@ -7,12 +7,16 @@ import TeamMemberForm from "@/components/admin/TeamMemberForm";
 import { toast } from "sonner";
 import Image from "next/image";
 
+import { getSession } from "@/lib/actions/auth";
+import { redirect } from "next/navigation";
+
 export default function AdminTeamPage() {
   const [members, setMembers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const fetchMembers = async () => {
     setIsLoading(true);
@@ -24,8 +28,19 @@ export default function AdminTeamPage() {
   };
 
   useEffect(() => {
-    fetchMembers();
+    async function checkAuth() {
+        const session = await getSession();
+        if (!session || session.role !== "ADMIN") {
+            redirect("/admin");
+        } else {
+            setIsAuthorized(true);
+            fetchMembers();
+        }
+    }
+    checkAuth();
   }, []);
+
+  if (isAuthorized === null) return null;
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Are you sure you want to delete ${name}?`)) return;

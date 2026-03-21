@@ -28,8 +28,8 @@ export default function CTA({
 }: CTAProps) {
   
   const themes = {
-    forest: "bg-linear-to-r from-brand-forest to-brand-dark shadow-forest-500/20",
-    sky: "bg-linear-to-r from-brand-cyan to-brand-teal shadow-cyan-500/20"
+    forest: "bg-black/90 backdrop-blur-xl border border-white/10 shadow-black/40",
+    sky: "bg-linear-to-r from-brand-cyan via-brand-teal to-black shadow-cyan-500/20"
   };
 
   return (

@@ -47,13 +47,13 @@ export default function TeamMemberForm({ initialData, onSuccess, onCancel }: Tea
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
       const prompt = isGenerating 
-        ? `Write a professional, 2-3 sentence bio for a team member of the REACT Initiative (Rural Empowerment and Climate Technology).
+        ? `Write a professional, 2-3 sentence bio for a team member of the Rooted Rising Initiative.
            Name: ${formData.name}
            Role: ${formData.role}
-           Context: REACT focuses on climate resilience and community empowerment in rural areas.
+           Context: Rooted Rising focuses on climate action and gender equality through storytelling, art, and grassroots activism.
            Tone: Professional, inspiring, and impactful.
            CRITICAL: Return ONLY plain text. NO markdown (no bold, no italics), NO hashtags.`
-        : `Refine this professional bio for a team member of the REACT Initiative.
+        : `Refine this professional bio for a team member of the Rooted Rising Initiative.
            Team Member: ${formData.name} (${formData.role})
            Current Bio: ${formData.bio}
            Task: Make it more engaging, professional, and impactful. 
@@ -186,7 +186,7 @@ export default function TeamMemberForm({ initialData, onSuccess, onCancel }: Tea
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-forest/20"
-                placeholder="public@ireact.org"
+                placeholder="public@rootedrising.org.ng"
               />
             </div>
           </div>

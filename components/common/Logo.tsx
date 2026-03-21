@@ -13,11 +13,7 @@ interface LogoProps {
 export default function Logo({ className, isDark = false }: LogoProps) {
   return (
     <Link href="/" className={cn("flex items-center gap-3 transition-all hover:opacity-90 active:scale-95 group", className)}>
-      <motion.div 
-        animate={{ rotate: 360 }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="relative h-14 w-32 overflow-hidden rounded-xl transition-all"
-      >
+      <div className="relative h-14 w-32 overflow-hidden rounded-xl transition-all">
         <Image
           src="/images/logo.png"
           alt="REACT Logo"
@@ -25,7 +21,7 @@ export default function Logo({ className, isDark = false }: LogoProps) {
           className="object-contain"
           priority
         />
-      </motion.div>
+      </div>
     </Link>
   );
 }

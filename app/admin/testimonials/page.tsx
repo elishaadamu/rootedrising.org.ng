@@ -7,12 +7,16 @@ import TestimonialForm from "@/components/admin/TestimonialForm";
 import { toast } from "sonner";
 import Image from "next/image";
 
+import { getSession } from "@/lib/actions/auth";
+import { redirect } from "next/navigation";
+
 export default function AdminTestimonialsPage() {
   const [testimonials, setTestimonials] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const fetchTestimonials = async () => {
     setIsLoading(true);
@@ -24,8 +28,19 @@ export default function AdminTestimonialsPage() {
   };
 
   useEffect(() => {
-    fetchTestimonials();
+    async function checkAuth() {
+      const session = await getSession();
+      if (!session || session.role !== "ADMIN") {
+          redirect("/admin");
+      } else {
+          setIsAuthorized(true);
+          fetchTestimonials();
+      }
+    }
+    checkAuth();
   }, []);
+
+  if (isAuthorized === null) return null;
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Are you sure you want to delete the testimonial from ${name}?`)) return;

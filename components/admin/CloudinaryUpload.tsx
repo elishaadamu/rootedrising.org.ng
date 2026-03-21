@@ -32,7 +32,7 @@ export default function CloudinaryUpload({ onUpload, defaultValue }: CloudinaryU
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "ireact_preset"); // User needs to set this up or I provide a generic one if using signed uploads
+    formData.append("upload_preset", "rootedrising_preset"); 
 
     try {
       // For simplicity in this demo, we'll use a server action if we have one, 

@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import HeroCarousel from "@/components/common/HeroCarousel";
 import CTA from "@/components/common/CTA";
-import { BlogSection } from "@/components/blog/BlogComponents";
+import { BlogSection, BlogCard } from "@/components/blog/BlogComponents";
 import GallerySection from "@/components/home/GallerySection";
 import TestimonialSlider from "@/components/about/TestimonialSlider";
 import TeamSection from "@/components/about/TeamSection";
@@ -37,7 +37,31 @@ const staggerContainer = {
   }
 } as any;
 
-export default function HomeClient({ posts }: { posts: any[] }) {
+export default function HomeClient({ 
+  blogPosts, 
+  campaignPosts,
+  videos = []
+}: { 
+  blogPosts: any[]; 
+  campaignPosts: any[]; 
+  videos?: any[];
+}) {
+  const getEmbedUrl = (url: string) => {
+    if (!url) return "";
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    const videoId = (match && match[2].length === 11) ? match[2] : null;
+    return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=0` : url;
+  };
+
+  const fallbackVideos = [
+    { title: "Oil Extraction and Water Pollution", link: "https://www.youtube.com/embed/dy-baZfnC-c?si=qi38nrQ_swvxAdXY" },
+    { title: "16 Days of Activism (Gender Based Violence)", link: "https://www.youtube.com/embed/veRrjFfKugY?si=MZAzTTV2Da0ct0WY" },
+    { title: "What is Climate Change?", link: "https://www.youtube.com/embed/7UMDpY263y8?si=tmghp3cmx9MEi-YB" }
+  ];
+
+  const displayVideos = videos.length >= 3 ? videos : [...videos, ...fallbackVideos.slice(videos.length)];
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -177,15 +201,11 @@ export default function HomeClient({ posts }: { posts: any[] }) {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {[
-              { title: "Oil Extraction and Water Pollution", link: "https://www.youtube.com/embed/dy-baZfnC-c?si=qi38nrQ_swvxAdXY" },
-              { title: "16 Days of Activism (Gender Based Violence)", link: "https://www.youtube.com/embed/veRrjFfKugY?si=MZAzTTV2Da0ct0WY" },
-              { title: "What is Climate Change?", link: "https://www.youtube.com/embed/7UMDpY263y8?si=tmghp3cmx9MEi-YB" }
-            ].map((video, idx) => (
+            {displayVideos.map((video, idx) => (
               <VideoCard 
                 key={idx}
                 title={video.title}
-                videoUrl={video.link}
+                videoUrl={video.url || video.link}
                 index={idx}
                 variant="white"
                 aspect="square"
@@ -267,6 +287,29 @@ export default function HomeClient({ posts }: { posts: any[] }) {
               </motion.div>
             ))}
           </motion.div>
+ 
+          {/* Campaign Posts Grid under Our Focus */}
+          {campaignPosts.length > 0 && (
+            <div className="mt-20">
+              <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
+                <div className="text-left">
+                  <h4 className="text-sm font-black uppercase tracking-[0.2em] text-brand-forest mb-2">Ongoing Advocacy</h4>
+                  <h5 className="text-2xl font-black text-slate-900">Latest <span className="header-highlight highlight-yellow">Campaigns</span></h5>
+                </div>
+                <Link 
+                  href="/campaigns/all" 
+                  className="group inline-flex items-center gap-2 font-bold text-brand-forest hover:gap-3 transition-all"
+                >
+                  Explore all campaigns <ArrowRight size={18} />
+                </Link>
+              </div>
+              <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 text-left">
+                {campaignPosts.map((post, idx) => (
+                  <BlogCard key={post.slug} post={post} index={idx} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -274,7 +317,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
       <GallerySection />
 
       {/* Approach Section */}
-      <section id="approach" className="section-padding bg-slate-900 text-white relative overflow-hidden">
+      <section id="approach" className="section-padding bg-black/95 backdrop-blur-xl border border-white/10  text-white relative overflow-hidden">
         <div aria-hidden="true" className="absolute inset-0 square-grid opacity-10"></div>
         <div aria-hidden="true" className="absolute bottom-0 left-0 -ml-32 -mb-32 h-[500px] w-[500px] rounded-full bg-brand-cyan/20 blur-3xl opacity-40"></div>
         <div aria-hidden="true" className="absolute top-0 right-0 -mr-32 -mt-32 h-[500px] w-[500px] rounded-full bg-brand-forest/10 blur-3xl opacity-20"></div>
@@ -344,13 +387,13 @@ export default function HomeClient({ posts }: { posts: any[] }) {
       <TeamSection />
       <TestimonialSlider />
       {/* Blog Section */}
-      <BlogSection posts={posts} />
+      <BlogSection posts={blogPosts} />
 
       <CTA 
         title="Ready to make an impact?"
         subtitle="Join our network of ambassadors, partners, and community leaders. Together, we can build a resilient future."
         primaryButtonText="Join the Movement"
-        primaryButtonHref="/opportunities"
+        primaryButtonHref="https://forms.gle/mkGvsk2jL9BqGSdX8"
         secondaryButtonText="Work with Us"
         secondaryButtonHref="/contact"
       />

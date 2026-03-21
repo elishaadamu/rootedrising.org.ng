@@ -121,7 +121,7 @@ export default function CampaignForm() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
              <div className="flex items-center gap-2 order-2 sm:order-1">
                 <div className="h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-slate-100 flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-slate-500 shrink-0">i</div>
-                <span className="text-[10px] sm:text-xs text-slate-400 font-medium italic text-center sm:text-left">Email will include IREACT brand footer automatically.</span>
+                <span className="text-[10px] sm:text-xs text-slate-400 font-medium italic text-center sm:text-left">Email will include Rooted Rising brand footer automatically.</span>
              </div>
              <button
               type="submit"
@@ -147,8 +147,8 @@ export default function CampaignForm() {
               <h4 className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 mb-6 sm:mb-8 text-center">— Mobile Preview —</h4>
               <div className="max-w-md mx-auto border border-slate-100 rounded-2xl sm:rounded-3xl p-5 sm:p-8 bg-white shadow-inner">
                 <div className="text-center mb-6 sm:mb-10">
-                  <h2 className="text-xl sm:text-2xl font-black text-brand-forest m-0 leading-tight">IREACT Initiative</h2>
-                  <p className="uppercase text-[7px] sm:text-[8px] tracking-widest font-black text-slate-400 mt-1">Rural Empowerment</p>
+                  <h2 className="text-xl sm:text-2xl font-black text-brand-forest m-0 leading-tight">Rooted Rising Initiative</h2>
+                  <p className="uppercase text-[7px] sm:text-[8px] tracking-widest font-black text-slate-400 mt-1">Rooted in Truth, Rising for Justice</p>
                 </div>
                 <div className="space-y-3 sm:space-y-4">
                   <p className="text-[11px] sm:text-xs font-bold text-slate-900 leading-relaxed line-clamp-2">

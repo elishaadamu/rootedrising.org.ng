@@ -94,9 +94,10 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
       const { GoogleGenerativeAI } = await import("@google/generative-ai");
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-      const prompt = `Refine this blog post content for the REACT Initiative (Rural Empowerment and Climate Technology). 
-      Make it professional, engaging, and impactful. Return the refined content in HTML format suitable for a blog post.
+ 
+      const prompt = `Refine this blog post content for the Rooted Rising Initiative. 
+      Make it professional, engaging, and impactful. The initiative focuses on climate action and gender equality through storytelling, art, and grassroots activism.
+      Return the refined content in HTML format suitable for a blog post.
       
       Title: ${title}
       Excerpt: ${excerpt}
@@ -138,7 +139,7 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
             </Link>
             <div className="hidden xs:block">
               <h2 className="text-base sm:text-lg font-black text-slate-900 leading-tight">Editor</h2>
-              <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">REACT CMS</p>
+              <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">Rooted Rising CMS</p>
             </div>
           </div>
 
@@ -272,7 +273,8 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
               >
                 <option value="Articles">Articles</option>
                 <option value="Poems">Poems</option>
-                <option value="Campaign">Campaign</option>
+                <option value="Campaigns">Campaigns</option>
+                <option value="Story">Story</option>
               </select>
             </div>
           </div>
@@ -295,7 +297,7 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
                         [{ 'header': [1, 2, 3, false] }],
                         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                         [{'list': 'ordered'}, {'list': 'bullet'}],
-                        ['link', 'image'],
+                        ['link', 'image', 'video'],
                         ['clean']
                     ],
                   }}

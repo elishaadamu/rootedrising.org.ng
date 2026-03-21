@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     // Upload to Cloudinary
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
-        { folder: 'ireact_uploads' },
+        { folder: 'rootedrising_uploads' },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);

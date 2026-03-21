@@ -147,6 +147,17 @@ h1, h2, h3, h4 {
   @apply my-16 border-t border-slate-100;
 }
 
+/* Video Embeds Support */
+.prose iframe, 
+.prose-react iframe {
+  @apply w-full aspect-video rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl my-8 sm:my-12 border border-slate-100;
+}
+
+/* Image alignment within posts */
+.prose-react img {
+  @apply rounded-2xl sm:rounded-[2.5rem] shadow-xl sm:shadow-2xl my-8 sm:my-12 w-full object-cover;
+}
+
 .prose-react table {
   @apply w-full border-collapse mb-8 text-sm;
 }

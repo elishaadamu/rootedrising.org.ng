@@ -1,13 +1,13 @@
 ---
-title: 'Youth Leadership in Climate Technology'
+title: 'Youth Leadership in Media Advocacy'
 date: 'March 08, 2026'
 author: 'Samuel Okafor'
 category: 'Youth Empowerment'
 image: '/images/gallery/IMG_2021.JPG'
-excerpt: 'Empowering the next generation to lead climate action through digital literacy and grassroots innovation.'
+excerpt: 'Empowering the next generation to lead climate action through storytelling, art, and grassroots advocacy.'
 ---
 
-# Youth Leadership in Climate Technology
+# Youth Leadership in Media Advocacy
 
 ## The Power of the Next Generation
 Africa has the youngest population in the world. This is not just a demographic fact; it is our greatest asset in the fight against climate change. 

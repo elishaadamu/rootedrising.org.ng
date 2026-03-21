@@ -28,7 +28,8 @@ export default function VideoCard({
   useEffect(() => {
     // Extract YouTube ID from URL
     const getYouTubeId = (url: string) => {
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      if (!url) return null;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
       const match = url.match(regExp);
       return (match && match[2].length === 11) ? match[2] : null;
     };
@@ -38,7 +39,7 @@ export default function VideoCard({
       setThumbnailUrl(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
     } else {
       // Fallback or handle non-youtube
-      setThumbnailUrl("/images/placeholder-video.jpg");
+      setThumbnailUrl("/images/video.png");
     }
   }, [videoUrl]);
 

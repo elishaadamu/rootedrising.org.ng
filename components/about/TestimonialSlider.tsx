@@ -62,10 +62,10 @@ export default function TestimonialSlider() {
     }
   }, [visibleCount, data.length]);
 
-  if (isLoading) return <div className="py-20 bg-slate-900 text-center text-white/50">Loading testimonials...</div>;
+  if (isLoading) return <div className="py-20 bg-black/95 backdrop-blur-xl border border-white/10 text-center text-white/50">Loading testimonials...</div>;
 
   return (
-    <section className="section-padding bg-slate-900 text-white relative overflow-hidden">
+    <section className="section-padding bg-black/95 backdrop-blur-xl border border-white/10 text-white relative overflow-hidden">
       <div className="absolute inset-0 square-grid opacity-10"></div>
       
       <div className="mx-auto max-w-7xl relative z-10 px-6 sm:px-12">

@@ -1,32 +1,32 @@
 export const campaignTemplates = [
   {
     id: "blog-update",
-    name: "Latest Blog Update",
-    subject: "New Story from the Field: [Title]",
-    content: "We've just published a new article about [Topic]. Read how IREACT is making a difference in underserved communities."
+    name: "Latest Impact Stories",
+    subject: "New Perspective: [Title]",
+    content: "Rooted in Truth, Rising for Justice. We've just published a new story on [Topic]. See how Rooted Rising is amplifying voices of change."
   },
   {
     id: "newsletter",
-    name: "Monthly Impact Digest",
-    subject: "IREACT Impact Report: See what we achieved together",
-    content: "This month, we've empowered [X] farmers and restored [Y] hectares of land. Thank you for being part of this journey."
+    name: "Monthly Advocacy Digest",
+    subject: "Rooted Rising Monthly: Advocacy in Action",
+    content: "Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling and art to ignite climate action and gender equality. This month, we've engaged [X] community leaders across our target regions."
   },
   {
     id: "recruitment",
-    name: "Ambassador Recruitment",
-    subject: "Join our next mission as an IREACT Ambassador",
-    content: "We are looking for dedicated youth leaders for our upcoming project in [Region]. Apply now and lead the change."
+    name: "Volunteer Recruitment",
+    subject: "Become a Rooted Rising Advocate",
+    content: "Rooted in Truth, Rising for Justice. Join our movement as a storyteller and advocate for climate justice. We're looking for passionate creators to lead our next mission."
   },
   {
     id: "community-spotlight",
-    name: "Community Spotlight",
-    subject: "Stories of Resilience from [Community Name]",
-    content: "Discover how the residents of [Community Name] are leveraging climate technology to build a sustainable future."
+    name: "Grassroots Spotlight",
+    subject: "Truth from the Ground: [Community Name]",
+    content: "Discover how the activists at [Community Name] are leveraging art and storytelling to build a more equal and sustainable future with Rooted Rising."
   },
   {
     id: "urgent-action",
-    name: "Action Alert",
-    subject: "URGENT: Supporting [Target Group] through [Crisis/Event]",
-    content: "Immediate action is needed to support [Target Group]. Learn how you can contribute to our resilience-building efforts."
+    name: "Emergency Advocacy",
+    subject: "ACT NOW: Standing for [Target Group]",
+    content: "Immediate advocacy is needed for [Target Group]. Learn how you can join Rooted Rising's grassroots efforts to demand justice and climate resilience."
   }
 ];

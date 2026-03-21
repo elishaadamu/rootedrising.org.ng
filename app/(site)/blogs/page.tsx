@@ -13,6 +13,8 @@ function createExcerpt(htmlContent: string, maxLength: number = 150) {
   return plainText.substring(0, plainText.lastIndexOf(" ", maxLength)) + "...";
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogListingPage({
   searchParams,
 }: {
@@ -28,7 +30,9 @@ export default async function BlogListingPage({
     dbPosts = await prisma.post.findMany({
       where: { 
         published: true,
-        section: section ? { equals: section } : { notIn: ["Campaign"] }
+        section: section 
+          ? { equals: section, mode: 'insensitive' } 
+          : { in: ["Articles", "article", "Article", "Poems", "poem", "Poem", "Story", "story", "General"] }
       },
       include: { 
         author: true,
@@ -38,6 +42,10 @@ export default async function BlogListingPage({
       },
       orderBy: { createdAt: "desc" },
     });
+
+    const totalCount = await prisma.post.count();
+    const publishedCount = await prisma.post.count({ where: { published: true } });
+    console.log(`DEBUG: DB Total: ${totalCount}, DB Published: ${publishedCount}, Section: ${section || 'General'}`);
   } catch (error) {
     console.error("Database error fetching blog posts:", error);
   }
@@ -46,6 +54,8 @@ export default async function BlogListingPage({
   const mdPosts = getAllPosts().filter(p => !section || p.category === section);
 
   // 3. Combine and Sort
+  console.log(`DEBUG: Found ${dbPosts.length} posts in DB and ${mdPosts.length} in Markdown.`);
+  
   const posts = [
     ...mdPosts.map(p => ({
       ...p,
@@ -61,8 +71,10 @@ export default async function BlogListingPage({
     }))
   ].sort((a, b) => new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime());
 
+  console.log(`DEBUG: Total combined posts: ${posts.length}`);
+
   const featuredPost = posts[0];
-  const allGridPosts = posts.slice(1);
+  const allGridPosts = posts; // Don't slice, show everything in the grid
   
   const totalPages = Math.ceil(allGridPosts.length / ITEMS_PER_PAGE);
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -79,16 +91,25 @@ export default async function BlogListingPage({
         height="half"
         titleSize="lg"
       >
-         {featuredPost && (
-            <div className="mt-8 flex justify-center">
-               <Link 
-                href={`/blogs/${featuredPost.slug}`}
-                className="group flex items-center gap-3 px-8 py-4 bg-brand-forest text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-brand-orange transition-all shadow-2xl hover:-translate-y-1 active:scale-95"
-               >
-                 Read Featured Story <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-               </Link>
-            </div>
-         )}
+         {featuredPost && (() => {
+            const dateObj = new Date(featuredPost.createdAt);
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const catSlug = (featuredPost.section || "insight").toLowerCase();
+            const detailUrl = `/${catSlug}/${year}/${month}/${day}/${featuredPost.slug}`;
+            
+            return (
+              <div className="mt-8 flex justify-center">
+                 <Link 
+                  href={detailUrl}
+                  className="group flex items-center gap-3 px-8 py-4 bg-brand-forest text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-brand-orange transition-all shadow-2xl hover:-translate-y-1 active:scale-95"
+                 >
+                   Read Featured Story <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                 </Link>
+              </div>
+            );
+         })()}
       </Hero>
 
       <section className="section-padding bg-slate-50 relative overflow-hidden font-outfit">
@@ -118,7 +139,7 @@ export default async function BlogListingPage({
                 <BlogCard key={post.slug} post={{
                   ...post,
                   date: new Date(post.createdAt).toISOString(),
-                  author: post.author.name,
+                  author: post.author?.name || "Rooted Rising",
                   rating: avgRating,
                   category: post.section,
                   excerpt: createExcerpt(post.content)
