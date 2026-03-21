@@ -15,13 +15,12 @@ export default async function AllCampaignsPage(props: {
   const searchParams = await props.searchParams;
   const currentPage = Number(searchParams.page) || 1;
 
-  // 1. Fetch from Database
+  // 1. Fetch from Database (Fetch all to determine true status)
   let dbCampaigns: any[] = [];
   try {
     dbCampaigns = await prisma.post.findMany({
       where: { 
-        section: { in: ["Campaign", "Campaigns", "campaign"] },
-        published: true 
+        section: { in: ["Campaign", "Campaigns", "campaign"] }
       },
       include: { 
         author: true,
@@ -36,7 +35,7 @@ export default async function AllCampaignsPage(props: {
   // 2. Fetch from Markdown
   const mdCampaigns = getAllCampaigns();
 
-  // Combine both sources, deduplicate by slug (DB takes priority for ratings)
+  // Combine both sources, deduplicate by slug (DB takes priority for status)
   const combinedMap = new Map();
   
   mdCampaigns.forEach(c => {
@@ -45,7 +44,8 @@ export default async function AllCampaignsPage(props: {
       date: c.date,
       rating: 0,
       isExternal: false,
-      source: 'md'
+      source: 'md',
+      published: true // Default for files
     });
   });
 
@@ -62,11 +62,14 @@ export default async function AllCampaignsPage(props: {
         ? p.comments.reduce((acc: number, curr: { rating: number }) => acc + curr.rating, 0) / p.comments.length 
         : 0,
       isExternal: false,
-      source: p.content.startsWith('#') ? 'md' : 'db' // Heuristic
+      source: p.content.startsWith('#') ? 'md' : 'db',
+      published: p.published // Crucial: use the DB published flag
     });
   });
 
-  const allBlogs = Array.from(combinedMap.values()).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const allBlogs = Array.from(combinedMap.values())
+    .filter(c => c.published) // Only show published ones
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   // Pagination Logic
   const totalItems = allBlogs.length;

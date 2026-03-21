@@ -25,12 +25,11 @@ export default async function Home() {
     },
   });
 
-  // 2. Fetch Campaigns (Sync with Archive Logic)
+  // 2. Fetch Campaigns (Respect DB as Source of Truth for Status)
   let dbCampaigns: any[] = [];
   try {
     dbCampaigns = await prisma.post.findMany({
       where: { 
-        published: true,
         section: { in: ['Campaign', 'Campaigns', 'campaign'] }
       },
       include: { 
@@ -43,17 +42,19 @@ export default async function Home() {
 
   const mdCampaigns = getAllCampaigns();
   
-  // Combine logic from campaigns/all/page.tsx
   const campaignMap = new Map();
+  // First, load all Markdown campaigns
   mdCampaigns.forEach(c => {
     campaignMap.set(c.slug, {
       ...c,
       createdAt: c.date,
       rating: 0,
-      isMarkdown: true
+      isMarkdown: true,
+      published: true // Markdown files are published by default
     });
   });
 
+  // Then, override with Database info. If it's in DB, the DB status rules.
   dbCampaigns.forEach(p => {
     const avgRating = p.comments.length > 0 
       ? p.comments.reduce((acc: number, curr: any) => acc + curr.rating, 0) / p.comments.length 
@@ -68,11 +69,14 @@ export default async function Home() {
       category: "campaigns",
       author: p.author?.name || "Rooted Rising",
       rating: avgRating,
-      isMarkdown: false
+      isMarkdown: false,
+      published: p.published // Crucial: use the DB published flag
     });
   });
 
+  // Filter for only published posts
   const allCampaigns = Array.from(campaignMap.values())
+    .filter(c => c.published)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   // 3. Fetch latest 3 active videos
