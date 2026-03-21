@@ -85,7 +85,7 @@ export async function createTeamMember(data: any) {
 
                 <div style="padding-top: 25px; border-top: 1px solid #f1f5f9; font-size: 12px; color: #94a3b8; text-align: center;">
                   © ${new Date().getFullYear()} Rooted Rising Initiative. <br/>
-                  Roots of Resilience, Rising for our Future
+                  Rooted in Truth, Rising for Justice
                 </div>
               </div>
             `,

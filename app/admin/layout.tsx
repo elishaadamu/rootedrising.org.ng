@@ -48,7 +48,7 @@ export default async function AdminLayout({
     { name: "Campaign Highlights", href: "/admin/highlights", icon: <Sparkles size={20} />, roles: ["ADMIN", "EDITOR"] },
     { name: "Pamphlets", href: "/admin/pamphlets", icon: <FileText size={20} />, roles: ["ADMIN", "EDITOR"] },
     { name: "Artvocacy", href: "/admin/artvocacy", icon: <FileText size={20} />, roles: ["ADMIN", "EDITOR"] },
-    { name: "Advocacy Videos", href: "/admin/videos", icon: <Play size={20} />, roles: ["ADMIN", "EDITOR"] },
+    { name: "VOTFL Videos", href: "/admin/videos", icon: <Play size={20} />, roles: ["ADMIN", "EDITOR"] },
     { name: "Team", href: "/admin/team", icon: <Users size={20} />, roles: ["ADMIN"] },
     { name: "Testimonials", href: "/admin/testimonials", icon: <MessageSquare size={20} />, roles: ["ADMIN"] },
     { name: "Comments", href: "/admin/comments", icon: <MessageSquare size={20} />, roles: ["ADMIN"] },

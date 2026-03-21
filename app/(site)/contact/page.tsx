@@ -17,12 +17,6 @@ const contactMethods = [
     value: "+234 (0) 706 821 2022",
     href: "tel:+2347068212022"
   },
-  {
-    icon: <Globe className="h-6 w-6 text-brand-forest" />,
-    label: "Main Office",
-    value: "45 Yakubu Gowon Way, Jos, Nigeria",
-    href: "https://maps.google.com/?q=45+Yakubu+Gowon+Way+Jos+Plateau+State+Nigeria"
-  }
 ];
 
 export default function ContactPage() {

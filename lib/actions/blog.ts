@@ -112,7 +112,14 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
     });
 
     if (published) {
-      await notifySubscribersOfNewPost({ title, excerpt, slug, section, image });
+      await notifySubscribersOfNewPost({ 
+        title, 
+        excerpt, 
+        slug, 
+        section, 
+        image,
+        createdAt: post.createdAt 
+      });
     }
 
     revalidatePath("/blog");

@@ -18,6 +18,7 @@ const navLinks = [
   { name: "Campaigns", href: "/campaigns" },
   { name: "About Us", href: "/about" },
   { name: "Blogs", href: "/blogs" },
+  { name: "Contact Us", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -101,7 +102,7 @@ export default function Navbar() {
         </Link>
 
         {/* Right-aligned Navigation and Actions */}
-        <div className="hidden items-center gap-10 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => {
             if (link.name === "Blogs") {
               return (

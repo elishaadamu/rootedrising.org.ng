@@ -40,17 +40,26 @@ export async function subscribeNewsletter(formData: FormData) {
             </a>
             <h2 style="color: #DA8E1F; margin-top: 0;">Welcome to Rooted Rising!</h2>
             <div style="text-align: left;">
-              <p>Thank you for subscribing to our newsletter. You're now part of a global youth-led community dedicated to climate resilience and sustainable development in underserved communities.</p>
-              <p>We'll keep you updated with:</p>
+              <p style="font-style: italic; font-weight: bold; color: #1A233E;">"We are Rooted in Truth, Rising for Justice."</p>
+              <p>Thank you for subscribing to our perspectives. Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality.</p>
+              <p>We're thrilled to have you as part of our community. We'll keep you updated with:</p>
               <ul>
-                <li>Localized climate insights</li>
-                <li>Research field notes</li>
-                <li>Impact stories from our communities</li>
+                <li>Media Advocacy & Storytelling</li>
+                <li>Art for Social Change</li>
+                <li>Grassroots Activism</li>
+                <li>Climate Action & Gender Equality</li>
               </ul>
               <p>Stay connected!</p>
             </div>
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #777;">
-              © ${new Date().getFullYear()} Rooted Rising Initiative. Roots of Resilience, Rising for our Future.
+            <div style="margin: 30px 0; text-align: center; display: flex; flex-direction: column; gap: 15px; align-items: center;">
+              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/blogs" style="background-color: #1A233E; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block; width: 220px;">Read our Current Blogs</a>
+              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/campaigns" style="background-color: #DA8E1F; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block; width: 220px;">View our Campaigns</a>
+            </div>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; font-size: 11px; font-weight: bold; color: #777; text-transform: uppercase; letter-spacing: 1px;">
+              Rooted in Truth, Rising for Justice
+            </div>
+            <div style="margin-top: 10px; font-size: 10px; color: #aaa;">
+              © ${new Date().getFullYear()} Rooted Rising Initiative.
             </div>
           </div>
         `,
@@ -121,7 +130,7 @@ export async function sendCampaign(formData: FormData) {
               <img src="cid:logo" alt="Rooted Rising Logo" style="height: 60px; margin-bottom: 20px; border: none;" />
             </a>
             <h1 style="color: #DA8E1F; margin: 0;">Rooted Rising</h1>
-            <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: bold; color: #64748b;">Roots of Resilience, Rising for our Future</p>
+            <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: bold; color: #64748b;">Rooted in Truth, Rising for Justice</p>
           </div>
           <div style="line-height: 1.6; font-size: 16px;">
             ${content.replace(/\n/g, '<br/>')}
@@ -130,8 +139,7 @@ export async function sendCampaign(formData: FormData) {
             <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/blogs" style="background-color: #1A233E; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block;">Read More on our Blog</a>
           </div>
           <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #94a3b8; text-align: center;">
-            You are receiving this because you subscribed to the Rooted Rising Initiative updates.<br/>
-            Jos, Nigeria
+            You are receiving this because you subscribed to the Rooted Rising Initiative updates.
           </div>
         </div>
       `,
@@ -163,28 +171,50 @@ export async function sendCampaign(formData: FormData) {
   }
 }
 
-export async function notifySubscribersOfNewPost(post: { title: string; excerpt: string; slug: string; section?: string; image?: string }) {
+export async function notifySubscribersOfNewPost(post: { 
+  title: string; 
+  excerpt: string; 
+  slug: string; 
+  section?: string; 
+  image?: string;
+  createdAt?: Date;
+}) {
   try {
     const subscribers = await (prisma as any).newsletter.findMany();
     if (subscribers.length === 0) return { success: true, message: "No subscribers" };
 
     const emails = subscribers.map((sub: any) => sub.email);
-    const postUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/blogs/${post.slug}`;
+    
+    // Determine the correct detail URL matching the site's routing: /[category]/[year]/[month]/[day]/[slug]
+    const d = post.createdAt ? new Date(post.createdAt) : new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const catSlug = (post.section || "insight").toLowerCase();
+    
+    const postUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/${catSlug}/${year}/${month}/${day}/${post.slug}`;
+
+    const categoryLabel = post.section === "Campaigns" ? "Campaign Story" : "New Perspectives";
+    const subjectPrefix = post.section === "Campaigns" ? "Campaign Update" : "New Perspectives";
+
+    const fullImageUrl = post.image 
+      ? (post.image.startsWith('http') ? post.image : `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}${post.image.startsWith('/') ? '' : '/'}${post.image}`)
+      : null;
 
     return await sendBulkEmail({
       emails,
-      subject: `New Perspectives: ${post.title} 📝`,
+      subject: `${subjectPrefix}: ${post.title} 🌍`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 20px; color: #1e293b;">
           <div style="text-align: center; margin-bottom: 30px;">
             <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}">
               <img src="cid:logo" alt="Rooted Rising Logo" style="height: 60px; margin-bottom: 20px; border: none;" />
             </a>
-            <h1 style="color: #DA8E1F; margin: 0;">New Post Alert!</h1>
-            <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: bold; color: #64748b;">Latest from Rooted Rising Initiative</p>
+            <h1 style="color: #DA8E1F; margin: 0;">${categoryLabel}!</h1>
+            <p style="text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: bold; color: #64748b;">Rooted in Truth, Rising for Justice</p>
           </div>
           
-          ${post.image ? `<div style="margin-bottom: 25px;"><img src="${post.image}" alt="${post.title}" style="width: 100%; border-radius: 15px; max-height: 300px; object-cover" /></div>` : ''}
+          ${fullImageUrl ? `<div style="margin-bottom: 25px;"><img src="${fullImageUrl}" alt="${post.title}" style="width: 100%; border-radius: 15px; max-height: 300px; object-fit: cover;" /></div>` : ''}
           
           <h2 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 10px;">${post.title}</h2>
           <p style="font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 25px;">${post.excerpt || 'Read our latest insights on climate resilience and sustainable development.'}</p>
@@ -194,8 +224,7 @@ export async function notifySubscribersOfNewPost(post: { title: string; excerpt:
           </div>
           
           <div style="padding-top: 25px; border-top: 1px solid #f1f5f9; font-size: 12px; color: #94a3b8; text-align: center;">
-            You are receiving this because you subscribed to Rooted Rising updates.<br/>
-            Jos, Nigeria
+            You are receiving this because you subscribed to Rooted Rising updates.
           </div>
         </div>
       `,
