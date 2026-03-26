@@ -151,13 +151,13 @@ export default async function CampaignsPage() {
          )}
       </Hero>
 
-      {/* Voice of the Frontline Section */}
+      {/* The People's Stories Section */}
       <section id="next-section" className="section-padding bg-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-yellow-50/50 rounded-bl-full z-0 opacity-50 blur-3xl"></div>
         <div className="mx-auto max-w-7xl px-6 relative z-10">
           <div className="mb-16 text-center">
             <h1 className="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">
-              <span className="header-highlight highlight-yellow">Voice of the Frontline</span>
+              <span className="header-highlight highlight-yellow">The People's Stories</span>
             </h1>
             <p className="mt-6 text-slate-500 max-w-2xl mx-auto font-medium">Documenting the lived experiences of communities at the forefront of the climate crisis through visual storytelling.</p>
           </div>

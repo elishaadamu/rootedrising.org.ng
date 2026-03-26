@@ -110,8 +110,7 @@ export default function AboutPage() {
                 Our Methodology
               </h2>
               <h3 className="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1]">
-                How We <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-orange-400">Advocate</span>
+                How we <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-orange-400">advocate</span>
               </h3>
             </motion.div>
             
@@ -128,42 +127,77 @@ export default function AboutPage() {
             </motion.div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
+                title: "Research",
+                desc: "Gathering data and lived experiences to inform our campaigns and debunk false solutions.",
+                image: "/images/rooted-rising-inititiative.png",
+                color: "from-slate-100 to-transparent",
+                border: "border-slate-200"
+              },
+              {
                 title: "Storytelling",
-                desc: "Capturing the raw, human essence of climate resilience through narrative-driven advocacy.",
-                image: "/images/storytelling.png",
+                desc: "Documenting personal narratives that drive empathy and demand climate justice.",
+                image: "/images/Stories.jpeg",
                 color: "from-brand-orange/10 to-transparent",
                 border: "border-brand-orange/10"
               },
               {
-                title: "Content Creation",
-                desc: "Producing high-impact digital media that bridges the gap between grassroots voices and global audiences.",
-                image: "/images/video.png",
+                title: "Art",
+                desc: "Leveraging visual creativity as a universal language for environmental mobilization.",
+                image: "/images/art.jpeg",
                 color: "from-brand-cyan/10 to-transparent",
                 border: "border-brand-cyan/10"
               },
               {
-                title: "Artistic Impact",
-                desc: "Using visual and performance arts as a universal language for environmental mobilization.",
-                image: "/images/art.png",
+                title: "Poems",
+                desc: "Using the power of verse to inspire reflection and ignite critical thinking about climate issues.",
+                image: "/images/let her be.jpg",
+                color: "from-brand-forest/10 to-transparent",
+                border: "border-brand-forest/10"
+              },
+              {
+                title: "Podcast",
+                desc: "Engaging audiences through deep-seated dialogues and expert insights on social justice.",
+                image: "/images/video.png",
+                color: "from-brand-navy/10 to-transparent",
+                border: "border-brand-navy/10"
+              },
+              {
+                title: "Short explainers",
+                desc: "Breaking down complex climate concepts into simple, relatable media formats.",
+                image: "/images/campaign-hero.jpg",
+                color: "from-yellow-100/30 to-transparent",
+                border: "border-yellow-200"
+              },
+              {
+                title: "Trainings",
+                desc: "Empowering youth and communities with the tools and knowledge for effective advocacy.",
+                image: "/images/training.jpeg",
+                color: "from-emerald-100/20 to-transparent",
+                border: "border-emerald-200"
+              },
+              {
+                title: "Community Engagement",
+                desc: "Building collective power through dialogue, collaboration, and grassroots action.",
+                image: "/images/community.jpeg",
                 color: "from-brand-forest/10 to-transparent",
                 border: "border-brand-forest/10"
               }
             ].map((card, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                className={`group relative overflow-hidden rounded-[3rem] bg-slate-50 border ${card.border} p-8 hover:bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-4`}
+                transition={{ delay: i * 0.1 }}
+                className={`group relative overflow-hidden rounded-[2.5rem] bg-slate-50 border ${card.border} p-6 hover:bg-white hover:shadow-xl transition-all duration-500 hover:-translate-y-2`}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
                 
                 <div className="relative z-10">
-                  <div className="mb-10 relative aspect-square w-full overflow-hidden rounded-[2rem] shadow-lg">
+                  <div className="mb-6 relative aspect-square w-full overflow-hidden rounded-3xl shadow-md">
                     <Image 
                       src={card.image} 
                       alt={card.title} 
@@ -172,16 +206,16 @@ export default function AboutPage() {
                     />
                   </div>
                   
-                  <h4 className="text-3xl font-black text-slate-900 mb-4 tracking-tight group-hover:text-brand-orange transition-colors">
+                  <h4 className="text-xl font-black text-slate-900 mb-2 tracking-tight group-hover:text-brand-orange transition-colors">
                     {card.title}
                   </h4>
-                  <p className="text-slate-600 text-lg leading-relaxed group-hover:text-slate-700 transition-colors font-medium">
+                  <p className="text-slate-500 text-sm leading-relaxed group-hover:text-slate-700 transition-colors font-medium">
                     {card.desc}
                   </p>
                 </div>
                 
-                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
-                  <ArrowRight className="text-brand-orange h-8 w-8" />
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
+                  <ArrowRight className="text-brand-orange h-4 w-4" />
                 </div>
               </motion.div>
             ))}

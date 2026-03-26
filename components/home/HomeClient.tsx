@@ -127,25 +127,27 @@ export default function HomeClient({
               variants={fadeIn}
             >
             <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-teal flex items-center gap-2">
-                <span className="h-0.5 w-8 bg-brand-teal"></span>
-                Introduction
+                
               </h2>
               <h3 className="mb-8 text-3xl font-extrabold leading-[1.2] text-slate-900 md:text-5xl">
                 Rooted in Truth, <br />
                 <span className="header-highlight highlight-cyan text-brand-navy">Rising for Justice</span>
               </h3>
               
-              <div className="space-y-6 text-xl leading-relaxed text-slate-700 font-medium">
+              <div className="space-y-6 text-lg leading-relaxed text-slate-700 font-medium">
                 <p>
-                  Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality.
+                  Rooted Rising Development Media Initiative is a grassroots, youth-led movement that uses storytelling, art, and community engagement to advance climate justice and gender equity in frontline communities.
                 </p>
-                <p className="text-brand-orange font-bold text-2xl italic border-l-4 border-brand-orange pl-6">
-                  "We are Rooted in Truth, Rising for Justice."
+                <p>
+                  It educates people in simple, relatable ways while amplifying the voices of women, girls, and marginalized groups most affected by environmental harm.
+                </p>
+                <p className="text-brand-orange font-bold border-l-4 border-brand-orange pl-6 my-8">
+                  The initiative works to debunk false solutions and challenge climate misinformation, using media and creative expression to inspire collective action toward a just and sustainable future.
                 </p>
               </div>
               
               <Link href="/about" className="mt-10 inline-flex items-center gap-2 font-bold text-brand-forest hover:gap-3 transition-all">
-                Learn more about our journey <ArrowRight size={18} />
+                Discover more about our vision <ArrowRight size={18} />
               </Link>
             </motion.div>
             
@@ -154,13 +156,13 @@ export default function HomeClient({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative aspect-video lg:aspect-square overflow-hidden rounded-3xl shadow-2xl"
+              className="relative aspect-video lg:aspect-square overflow-hidden shadow-2xl"
             >
               <Image 
-                src="/images/about-1.png" 
+                src="/images/about-us.jpeg" 
                 alt="Rooted Rising Advocacy" 
                 fill 
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
               <div className="absolute inset-0 bg-linear-to-t from-brand-dark/50 to-transparent"></div>
               <div className="absolute bottom-6 left-6 right-6 p-6 glass-card rounded-2xl border-white/40 shadow-2xl">
@@ -185,9 +187,9 @@ export default function HomeClient({
               variants={fadeIn}
               className="max-w-2xl"
             >
-              <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-orange">Voices from the field</h2>
+              <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-orange">Stories from the field</h2>
               <h3 className="text-3xl font-extrabold text-slate-900 md:text-5xl tracking-tight leading-tight">
-                Voice of the <span className="header-highlight highlight-cyan text-brand-navy">Frontline</span>
+                The People's <span className="header-highlight highlight-cyan text-brand-navy">Stories</span>
               </h3>
             </motion.div>
             
@@ -314,76 +316,7 @@ export default function HomeClient({
       </section>
 
       {/* Gallery Section */}
-      <GallerySection />
-
-      {/* Approach Section */}
-      <section id="approach" className="section-padding bg-black/95 backdrop-blur-xl border border-white/10  text-white relative overflow-hidden">
-        <div aria-hidden="true" className="absolute inset-0 square-grid opacity-10"></div>
-        <div aria-hidden="true" className="absolute bottom-0 left-0 -ml-32 -mb-32 h-[500px] w-[500px] rounded-full bg-brand-cyan/20 blur-3xl opacity-40"></div>
-        <div aria-hidden="true" className="absolute top-0 right-0 -mr-32 -mt-32 h-[500px] w-[500px] rounded-full bg-brand-forest/10 blur-3xl opacity-20"></div>
-        
-        <div className="mx-auto max-w-7xl relative z-10">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative aspect-4/5 rounded-[3rem] overflow-hidden shadow-[0_0_50px_rgba(0,173,239,0.15)] border border-white/10"
-            >
-              <Image 
-                src="/images/about-2.png" 
-                alt="Farmer using technology" 
-                fill 
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent"></div>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeIn}
-            >
-              <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-orange flex items-center gap-3">
-                <span className="h-0.5 w-10 bg-brand-orange"></span>
-                Volunteer with us
-              </h2>
-              <h3 className="mb-8 text-4xl font-extrabold leading-[1.2] md:text-5xl text-white">
-                Building a Just, Inclusive, and <br/>
-                <span className="header-highlight highlight-cyan text-white">Sustainable Society</span>
-              </h3>
-              
-              <div className="space-y-8 text-xl text-slate-300 leading-relaxed font-medium">
-                <p>
-                  The Rooted Rising Initiative seeks to address the environmental and socio-economic challenges faced in the world. It aims to build a just, inclusive, and sustainable society where everyone can thrive and achieve self-actualization.
-                </p>
-
-                <div className="bg-white/5 border-l-4 border-brand-orange p-8 rounded-r-3xl backdrop-blur-sm">
-                  <h4 className="text-white text-2xl font-bold mb-4 italic">Our Mission</h4>
-                  <p className="text-slate-200 text-lg">
-                    Our mission is to ignite awareness, change narratives, educate, and inspire action among all stakeholders through various means, such as podcasts, multimedia stories, and community engagement. We aim to address the pressing issues affecting the world by promoting environmental conservation, socio-economic development, and community resilience.
-                  </p>
-                  <div className="mt-8">
-                    <Link 
-                      href="https://forms.gle/mkGvsk2jL9BqGSdX8"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-8 py-4 text-lg font-bold text-slate-900 transition-all hover:bg-white hover:scale-105 active:scale-95 shadow-lg"
-                    >
-                      Apply Now
-                      <ArrowRight className="h-5 w-5" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      
+      {/* <GallerySection /> */}
       <TeamSection />
       <TestimonialSlider />
       {/* Blog Section */}

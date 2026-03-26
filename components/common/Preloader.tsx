@@ -50,10 +50,10 @@ export default function Preloader() {
         </div>
       </div>
       
-      <div className={`mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 transition-all duration-500 delay-300 ${
+      <div className={`mt-8 text-sm font-black uppercase tracking-[0.5em] text-slate-400 transition-all duration-500 delay-300 ${
         exitAnimation ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
       }`}>
-        Empowering Local Resilience
+        Stories for Action
       </div>
 
       <style jsx>{`

@@ -83,7 +83,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-black/90 backdrop-blur-xl border-b border-white/10 transition-all duration-300 px-6 py-4 md:px-12 shadow-2xl">
+    <>
+    <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-xl border-b border-slate-100 transition-all duration-300 px-6 py-4 md:px-12 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link href="/" className="flex items-center gap-4 group shrink-0">
           <div className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-white/50 shadow-lg transition-transform hover:scale-110">
@@ -96,8 +97,8 @@ export default function Navbar() {
             />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-2xl md:text-3xl font-black text-white tracking-tighter">Rooted Rising</span>
-            <span className="text-xs md:text-sm font-bold text-brand-orange tracking-[0.4em] uppercase -mt-1">Initiative</span>
+            <span className="text-2xl md:text-3xl font-black text-brand-navy tracking-tighter">Rooted Rising</span>
+            <span className="text-[10px] md:text-xs mt-1 font-bold text-brand-orange tracking-widest uppercase">Development Media Initiative</span>
           </div>
         </Link>
 
@@ -115,7 +116,7 @@ export default function Navbar() {
                   <button
                     className={cn(
                       "flex items-center gap-1 text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
-                      pathname.startsWith("/blogs") ? "text-brand-orange" : "text-white/80 hover:text-white"
+                      pathname.startsWith("/blogs") ? "text-brand-orange" : "text-slate-600 hover:text-brand-navy"
                     )}
                   >
                     {link.name}
@@ -159,7 +160,7 @@ export default function Navbar() {
                 href={link.href}
                 className={cn(
                   "text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
-                  pathname === link.href ? "text-brand-orange" : "text-white/80 hover:text-white"
+                  pathname === link.href ? "text-brand-orange" : "text-slate-600 hover:text-brand-navy"
                 )}
               >
                 {link.name}
@@ -171,7 +172,7 @@ export default function Navbar() {
             {/* Search Trigger Icon - Desktop Right End */}
             <button 
               onClick={() => setIsSearchModalOpen(true)}
-              className="p-3 rounded-full bg-white/5 border border-white/10 text-slate-400 hover:text-brand-orange hover:border-brand-orange hover:bg-white/10 transition-all group shadow-sm active:scale-95 mr-2"
+              className="p-3 rounded-full bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange hover:border-brand-orange hover:bg-slate-100 transition-all group shadow-sm active:scale-95 mr-2"
               title="Search"
             >
               <Search size={22} className="transition-transform group-hover:scale-110" />
@@ -221,7 +222,7 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-black text-white/90 transition-all hover:text-brand-orange uppercase tracking-wider"
+                  className="text-sm font-black text-slate-600 transition-all hover:text-brand-orange uppercase tracking-wider"
                 >
                   Log in
                 </Link>
@@ -381,89 +382,90 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Search Modal - Covers Header/Footer via fixed positioning and high z-index */}
-      <AnimatePresence>
-        {isSearchModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-100 bg-slate-950/95 backdrop-blur-2xl flex flex-col p-6 md:p-12 lg:p-24 overflow-y-auto"
-          >
-            {/* Close Button */}
-            <button 
-              onClick={() => { setIsSearchModalOpen(false); setSearchQuery(""); }}
-              className="absolute top-8 right-8 h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all shadow-2xl"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="mx-auto max-w-4xl w-full flex flex-col pt-12">
-               {/* Large Search Input */}
-               <div className="relative mb-20 group">
-                  <input 
-                    autoFocus
-                    type="text" 
-                    placeholder="Search anything..." 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent border-b-2 border-white/10 text-3xl md:text-5xl lg:text-6xl font-black text-white placeholder:text-white/10 focus:outline-none focus:border-brand-orange transition-all pb-8 pr-16"
-                  />
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-brand-orange transition-colors">
-                     {isSearching ? <Loader2 size={40} className="animate-spin" /> : <Search size={40} />}
-                  </div>
-               </div>
-
-               {/* Large Results Display */}
-               <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
-                  {/* Navigation Links Results */}
-                  <div>
-                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-brand-orange mb-10 border-b border-brand-orange/20 pb-4">Navigation</h4>
-                    <div className="space-y-4">
-                      {searchResults.pages.length > 0 ? searchResults.pages.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => { setIsSearchModalOpen(false); setSearchQuery(""); }}
-                          className="flex items-center justify-between p-6 rounded-4xl bg-white/5 border border-white/5 hover:bg-brand-orange hover:border-brand-orange transition-all group"
-                        >
-                          <span className="text-xl font-black text-white">{link.name}</span>
-                          <ArrowRight className="h-6 w-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-white" />
-                        </Link>
-                      )) : (
-                        <p className="text-white/20 italic font-medium">No pages matching your search...</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Posts & Campaigns Results */}
-                  <div>
-                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-brand-teal mb-10 border-b border-brand-teal/20 pb-4">Latest Stories</h4>
-                    <div className="space-y-6">
-                      {searchResults.posts.length > 0 ? searchResults.posts.map((post: any) => (
-                        <Link
-                          key={post.slug}
-                          href={post.url}
-                          onClick={() => { setIsSearchModalOpen(false); setSearchQuery(""); }}
-                          className="flex flex-col group"
-                        >
-                          <div className="flex items-center gap-3 mb-2">
-                             <span className="px-3 py-1 rounded-full bg-brand-forest/30 text-[10px] font-black text-brand-forest uppercase tracking-widest">{post.section}</span>
-                             <span className="text-[10px] font-black uppercase tracking-widest text-white/20">{new Date(post.createdAt).toLocaleDateString()}</span>
-                          </div>
-                          <h5 className="text-xl font-bold text-white group-hover:text-brand-orange transition-colors leading-snug">{post.title}</h5>
-                          <div className="h-px w-full bg-white/5 mt-6 group-hover:bg-brand-orange/20 transition-all"></div>
-                        </Link>
-                      )) : (
-                        <p className="text-white/20 italic font-medium">No impact stories found...</p>
-                      )}
-                    </div>
-                  </div>
-               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </nav>
+    {/* Search Modal - Moved outside nav for global overlay */}
+    <AnimatePresence>
+      {isSearchModalOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-100 bg-slate-950/95 backdrop-blur-2xl flex flex-col p-6 md:p-12 lg:p-24 overflow-y-auto"
+        >
+          {/* Close Button */}
+          <button 
+            onClick={() => { setIsSearchModalOpen(false); setSearchQuery(""); }}
+            className="absolute top-8 right-8 h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all shadow-2xl"
+          >
+            <X size={24} />
+          </button>
+
+          <div className="mx-auto max-w-7xl w-full flex flex-col pt-12">
+             {/* Large Search Input */}
+             <div className="relative mb-20 group">
+                <input 
+                  autoFocus
+                  type="text" 
+                  placeholder="Search anything..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent border-b-2 border-white/10 text-3xl md:text-5xl lg:text-6xl font-black text-white placeholder:text-white/10 focus:outline-none focus:border-brand-orange transition-all pb-8 pr-16"
+                />
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-brand-orange transition-colors">
+                   {isSearching ? <Loader2 size={40} className="animate-spin" /> : <Search size={40} />}
+                </div>
+             </div>
+
+             {/* Large Results Display */}
+             <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
+                {/* Navigation Links Results */}
+                <div>
+                  <h4 className="text-xs font-black uppercase tracking-[0.5em] text-brand-orange mb-10 border-b border-brand-orange/20 pb-4">Navigation</h4>
+                  <div className="space-y-4">
+                    {searchResults.pages.length > 0 ? searchResults.pages.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => { setIsSearchModalOpen(false); setSearchQuery(""); }}
+                        className="flex items-center justify-between p-6 rounded-4xl bg-white/5 border border-white/5 hover:bg-brand-orange hover:border-brand-orange transition-all group"
+                      >
+                        <span className="text-xl font-black text-white">{link.name}</span>
+                        <ArrowRight className="h-6 w-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-white" />
+                      </Link>
+                    )) : (
+                      <p className="text-white/20 italic font-medium">No pages matching your search...</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Posts & Campaigns Results */}
+                <div>
+                  <h4 className="text-xs font-black uppercase tracking-[0.5em] text-brand-teal mb-10 border-b border-brand-teal/20 pb-4">Latest Stories</h4>
+                  <div className="space-y-6">
+                    {searchResults.posts.length > 0 ? searchResults.posts.map((post: any) => (
+                      <Link
+                        key={post.slug}
+                        href={post.url}
+                        onClick={() => { setIsSearchModalOpen(false); setSearchQuery(""); }}
+                        className="flex flex-col group"
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                           <span className="px-3 py-1 rounded-full bg-brand-forest/30 text-[10px] font-black text-brand-forest uppercase tracking-widest">{post.section}</span>
+                           <span className="text-[10px] font-black uppercase tracking-widest text-white/20">{new Date(post.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <h5 className="text-xl font-bold text-white group-hover:text-brand-orange transition-colors leading-snug">{post.title}</h5>
+                        <div className="h-px w-full bg-white/5 mt-6 group-hover:bg-brand-orange/20 transition-all"></div>
+                      </Link>
+                    )) : (
+                      <p className="text-white/20 italic font-medium">No impact stories found...</p>
+                    )}
+                  </div>
+                </div>
+             </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }

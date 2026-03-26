@@ -84,34 +84,33 @@ export default function Footer() {
       
       <div className="mx-auto max-w-7xl px-6 md:px-12 relative z-10">
         {/* Newsletter Section - Now at the Top */}
-        <div className="mb-20 pb-16 border-b border-slate-800/50">
-          <div className="grid lg:grid-cols-2 items-center gap-12 max-w-5xl mx-auto text-center lg:text-left">
-            <div>
-              <h2 className="text-3xl font-extrabold text-white mb-4 tracking-tight">Rooted in Truth, <br/><span className="text-brand-orange">Rising for Justice</span></h2>
-              <p className="text-slate-400 font-medium leading-relaxed text-sm">
-                Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality. Get the latest climate insights and impact stories delivered straight to your inbox.
-              </p>
+        <div className="mb-16 py-10 px-8 rounded-4xl bg-white/5 border border-white/5 backdrop-blur-sm max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tight uppercase">
+            Join Our Newsletter
+          </h2>
+          <p className="text-slate-400 font-medium text-sm mb-8">
+            Get stories for action and advocacy updates delivered to your inbox.
+          </p>
+          
+          <form onSubmit={handleSubscribe} className="max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input 
+                type="email" 
+                placeholder="Email address" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="grow bg-slate-800/50 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-bold text-white outline-none focus:border-brand-orange transition-all placeholder:text-slate-500"
+                required
+              />
+              <button 
+                type="submit"
+                disabled={isPending || !email}
+                className="sm:px-6 py-3 bg-brand-orange hover:bg-white rounded-xl text-slate-900 font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+              >
+                {isPending ? <Loader2 size={16} className="animate-spin" /> : <>Subscribe</>}
+              </button>
             </div>
-            <form onSubmit={handleSubscribe} className="relative group max-w-md w-full mx-auto lg:ml-auto lg:mr-0">
-              <div className="relative">
-                <input 
-                  type="email" 
-                  placeholder="Your email address" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-800/50 border border-slate-700/50 rounded-3xl px-8 py-5 text-base font-bold text-white outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all placeholder:text-slate-500"
-                  required
-                />
-                <button 
-                  type="submit"
-                  disabled={isPending || !email}
-                  className="absolute right-2 top-2 bottom-2 px-6 rounded-2xl bg-brand-forest text-white font-bold flex items-center justify-center gap-2 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-50 shadow-lg"
-                >
-                  {isPending ? <Loader2 size={18} className="animate-spin" /> : <>Subcribe <Send size={16} /></>}
-                </button>
-              </div>
-            </form>
-          </div>
+          </form>
         </div>
 
         <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-3">
@@ -128,7 +127,7 @@ export default function Footer() {
               </div>
               <div className="ml-4">
                 <span className="block text-3xl font-black tracking-tight text-white leading-none">Rooted Rising</span>
-                <span className="text-sm font-bold uppercase tracking-[0.2em] text-brand-orange mt-1 block">Initiative</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-orange mt-1 block leading-tight">Development Media Initiative</span>
               </div>
             </Link>
             <p className="mb-10 text-base leading-relaxed text-slate-400 max-w-xs">
