@@ -32,7 +32,7 @@ model Post {
   excerpt     String?
   content     String    @db.Text
   image       String?
-  author      User      @relation(fields: [authorId], references: [id])
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String
   comments    Comment[]
   section     String    @default("General") // Story, Strategy, Insight, etc.
@@ -104,7 +104,7 @@ model Testimonial {
 model ActivityLog {
   id          String   @id @default(cuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   action      String   // e.g., "CREATED", "UPDATED", "DELETED"
   entity      String   // e.g., "Post", "TeamMember"
   details     String   @db.Text
