@@ -24,6 +24,7 @@ const footerLinks = {
   navigation: [
     { name: "Home", href: "/" },
     { name: "Campaigns", href: "/campaigns" },
+    { name: "Artvocacy", href: "/artvocacy" },
     { name: "About Us", href: "/about" },
     { name: "Blogs", href: "/blogs" },
     { name: "Contact Us", href: "/contact" },

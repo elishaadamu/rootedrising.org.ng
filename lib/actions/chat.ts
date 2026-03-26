@@ -2,11 +2,12 @@
 "use server";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import prisma from "@/lib/prisma";
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // Provided by user
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
-const SYSTEM_PROMPT = `You are the AI Assistant for the Rooted Rising Initiative.
+const DEFAULT_SYSTEM_PROMPT = `You are the AI Assistant for the Rooted Rising Initiative.
 Rooted Rising is a dynamic media advocacy initiative that harnesses the power of storytelling, art, and grassroots activism to ignite climate action and gender equality.
 Our motto is: "Rooted in Truth, Rising for Justice."
 
@@ -38,11 +39,23 @@ IMPORTANT INSTRUCTIONS:
 - Contact: /contact
 - Dashboard/Admin: /admin`;
 
+async function getPrompt(key: string, fallback: string) {
+  try {
+    const setting = await (prisma as any).aISettings.findUnique({
+      where: { key }
+    });
+    return setting?.prompt || fallback;
+  } catch (error) {
+    return fallback;
+  }
+}
+
 export async function generateChatResponse(history: { role: "user" | "model", parts: { text: string }[] }[], message: string) {
   try {
+    const systemPrompt = await getPrompt("chat", DEFAULT_SYSTEM_PROMPT);
     const model = genAI.getGenerativeModel({ 
       model: "gemini-2.5-flash",
-      systemInstruction: SYSTEM_PROMPT
+      systemInstruction: systemPrompt
     });
 
     const chat = model.startChat({
@@ -63,34 +76,43 @@ export async function refineContent(content: string, options?: { title?: string;
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const { title, excerpt, type = "blog" } = options || {};
     
-    let prompt = "";
-
-    if (type === "bio") {
-      const isGenerating = !content;
-      prompt = isGenerating 
-        ? `Write a professional, 2-3 sentence bio for a team member of the Rooted Rising Initiative.
-           Name: ${title || "Team Member"}
-           Role: ${excerpt || "Staff"}
+    let basePrompt = "";
+    const defaultPrompts = {
+      bio: content 
+        ? `Refine this professional bio for a team member of the Rooted Rising Initiative.
+           Team Member: {title} ({excerpt})
+           Current Bio: {content}
+           Task: Make it more engaging, professional, and impactful. 
+           CRITICAL: Return ONLY plain text. NO markdown, NO hashtags.`
+        : `Write a professional, 2-3 sentence bio for a team member of the Rooted Rising Initiative.
+           Name: {title}
+           Role: {excerpt}
            Context: Rooted Rising focuses on climate action and gender equality through storytelling, art, and grassroots activism.
            Tone: Professional, inspiring, and impactful.
-           CRITICAL: Return ONLY plain text. NO markdown (no bold, no italics), NO hashtags.`
-        : `Refine this professional bio for a team member of the Rooted Rising Initiative.
-           Team Member: ${title || ""} (${excerpt || ""})
-           Current Bio: ${content}
-           Task: Make it more engaging, professional, and impactful. 
-           CRITICAL: Return ONLY plain text. NO markdown, NO hashtags.`;
-    } else {
-      prompt = `Refine this ${type === "highlight" ? "campaign highlight" : "blog post"} content for the Rooted Rising Initiative. 
-      Make it professional, engaging, and impactful. The initiative focuses on climate action and gender equality through storytelling, art, and grassroots activism.
-      Return the refined content in HTML format suitable for a blog post.
-      `;
+           CRITICAL: Return ONLY plain text. NO markdown (no bold, no italics), NO hashtags.`,
+      blog: `Refine this blog post content for the Rooted Rising Initiative. 
+             Make it professional, engaging, and impactful. The initiative focuses on climate action and gender equality through storytelling, art, and grassroots activism.
+             Return the refined content in HTML format suitable for a blog post.
+             Title: {title}
+             Excerpt: {excerpt}
+             Current Content: {content}`,
+      highlight: `Refine this campaign highlight content for the Rooted Rising Initiative. 
+                 Make it professional, engaging, and impactful. The initiative focuses on climate action and gender equality through storytelling, art, and grassroots activism.
+                 Return the refined content in HTML format suitable for a blog post.
+                 Title: {title}
+                 Excerpt: {excerpt}
+                 Current Content: {content}`
+    };
 
-      if (title) prompt += `\nTitle: ${title}`;
-      if (excerpt) prompt += `\nExcerpt: ${excerpt}`;
-      prompt += `\n\nCurrent Content: ${content}`;
-    }
+    basePrompt = await getPrompt(type, defaultPrompts[type] || defaultPrompts.blog);
 
-    const result = await model.generateContent(prompt);
+    // Dynamic variable replacement
+    const finalPrompt = basePrompt
+      .replace(/{title}/g, title || "")
+      .replace(/{excerpt}/g, excerpt || "")
+      .replace(/{content}/g, content || "");
+
+    const result = await model.generateContent(finalPrompt);
     const response = await result.response;
     const text = response.text();
     

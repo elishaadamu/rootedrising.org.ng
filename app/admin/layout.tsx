@@ -11,7 +11,8 @@ import {
   Lock,
   ClipboardList,
   Play,
-  Sparkles
+  Sparkles,
+  Brain
 } from "lucide-react";
 import AdminNav from "@/components/admin/AdminNav";
 
@@ -36,9 +37,6 @@ export default async function AdminLayout({
   }
 
   const role = dbUser.role;
-  const isAdmin = role === "ADMIN";
-  const isEditor = role === "EDITOR";
-  const isUser = role === "USER";
 
   // Filter routes based on role
   const allLinks = [
@@ -54,6 +52,7 @@ export default async function AdminLayout({
     { name: "Comments", href: "/admin/comments", icon: <MessageSquare size={20} />, roles: ["ADMIN"] },
     { name: "Subscribers", href: "/admin/subscribers", icon: <Mail size={20} />, roles: ["ADMIN"] },
     { name: "Email Campaigns", href: "/admin/campaigns", icon: <Send size={20} />, roles: ["ADMIN", "EDITOR"] },
+    { name: "AI Settings", href: "/admin/ai", icon: <Brain size={20} />, roles: ["ADMIN"] },
     { name: "Security", href: "/admin/settings/password", icon: <Lock size={20} />, roles: ["ADMIN", "EDITOR", "USER"] },
     { name: "Activity Logs", href: "/admin/logs", icon: <ClipboardList size={20} />, roles: ["ADMIN"] },
   ];

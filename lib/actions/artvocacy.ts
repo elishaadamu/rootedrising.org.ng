@@ -40,7 +40,20 @@ export async function deleteArtvocacy(id: string) {
     await (prisma as any).artvocacy.delete({ where: { id } });
     revalidatePath("/campaigns");
     revalidatePath("/admin/artvocacy");
+    revalidatePath("/artvocacy");
     return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function getArtvocacies() {
+  try {
+    const artvocacies = await (prisma as any).artvocacy.findMany({
+      where: { active: true },
+      orderBy: { createdAt: "desc" }
+    });
+    return { success: true, data: artvocacies };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
