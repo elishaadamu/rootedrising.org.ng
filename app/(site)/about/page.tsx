@@ -29,7 +29,7 @@ export default function AboutPage() {
       <Hero 
         title="About Rooted Rising"
         subtitle="Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality. We are Rooted in Truth, Rising for Justice"
-        backgroundImage="/images/about-us.jpg"
+        backgroundImage="/images/art.jpeg"
         scrollTarget="#about"
       />
 
