@@ -120,7 +120,7 @@ export default function LoginPage() {
 
           <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 flex gap-4 mt-10 mb-10">
              <AlertCircle className="h-5 w-5 text-amber-600 shrink-0" />
-             <p className="text-xs font-semibold text-amber-800 leading-relaxed">Only active ambassadors and staff currently have access.</p>
+             <p className="text-xs font-semibold text-amber-800 leading-relaxed">Only active staff currently have access.</p>
           </div>
 
           <p className="text-center text-slate-600 font-medium">

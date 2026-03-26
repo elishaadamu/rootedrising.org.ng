@@ -168,7 +168,7 @@ export default function Navbar() {
             );
           })}
 
-          <div className="flex items-center gap-4 border-l border-white/10 pl-8">
+          <div className="flex items-center gap-4 border-l border-slate-100 pl-8">
             {/* Search Trigger Icon - Desktop Right End */}
             <button 
               onClick={() => setIsSearchModalOpen(true)}
@@ -182,7 +182,7 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-white/10"
+                  className="flex items-center gap-3 rounded-full border border-slate-100 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-900 transition-all hover:bg-slate-100"
                 >
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-orange text-white shadow-lg">
                     <UserIcon size={16} />
@@ -197,19 +197,19 @@ export default function Navbar() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute right-0 mt-3 w-64 overflow-hidden rounded-4xl bg-slate-900 p-2 shadow-2xl border border-white/10 backdrop-blur-xl"
+                      className="absolute right-0 mt-3 w-64 overflow-hidden rounded-3xl bg-white p-2 shadow-2xl border border-slate-100"
                     >
                       <Link
                         href="/admin"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-3 rounded-2xl p-4 text-sm font-bold text-white/90 hover:bg-white/5 transition-colors"
+                        className="flex items-center gap-3 rounded-2xl p-4 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
                       >
                         <LayoutDashboard size={18} className="text-brand-orange" />
                         Admin Dashboard
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="flex w-full items-center gap-3 rounded-2xl p-4 text-sm font-bold text-rose-400 hover:bg-rose-500/10 transition-colors"
+                        className="flex w-full items-center gap-3 rounded-2xl p-4 text-sm font-bold text-rose-600 hover:bg-rose-50 transition-colors"
                       >
                         <LogOut size={18} />
                         Logout

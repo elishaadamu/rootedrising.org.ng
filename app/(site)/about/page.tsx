@@ -33,63 +33,7 @@ export default function AboutPage() {
         scrollTarget="#about"
       />
 
-      {/* Our Focus Area - 3 Card Grid */}
-      <section id="focus" className="section-padding bg-slate-50 relative overflow-hidden">
-        <div className="absolute inset-0 square-grid opacity-20"></div>
-        <div className="mx-auto max-w-7xl relative z-10">
-          <div className="text-center mb-20">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeIn}
-            >
-              <h2 className="text-brand-orange font-bold uppercase tracking-[0.2em] text-sm mb-4">Core Commitments</h2>
-              <h3 className="text-4xl md:text-6xl font-black text-slate-900 leading-tight">
-                Our <span className="header-highlight highlight-cyan text-slate-900">Focus</span>
-              </h3>
-            </motion.div>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Gender Justice",
-                desc: "Amplifying voices of women and marginalized genders in frontline communities. We advocate for equal participation in decision-making and policies that address systemic inequalities.",
-                icon: <Heart className="h-8 w-8" />,
-                color: "text-rose-600 bg-rose-50"
-              },
-              {
-                title: "Environment Justice",
-                desc: "Advocating for communities in oil-sacrificed zones. We demand accountability from polluters and ensure a just transition that is inclusive of those most affected by environmental harm.",
-                icon: <Scale className="h-8 w-8" />,
-                color: "text-brand-navy bg-navy-50"
-              },
-              {
-                title: "Society",
-                desc: "Empowering communities to challenge systemic injustices. We co-create solutions that prioritize human and ecological well-being, building a foundation for true societal progress.",
-                icon: <Users className="h-8 w-8" />,
-                color: "text-emerald-600 bg-emerald-50"
-              }
-            ].map((item, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 transition-all hover:shadow-2xl hover:-translate-y-2 flex flex-col items-center text-center"
-              >
-                <div className={`mb-8 flex h-20 w-20 items-center justify-center rounded-3xl transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 shadow-lg ${item.color}`}>
-                  {item.icon}
-                </div>
-                <h3 className="text-2xl font-black mb-4 text-slate-900 group-hover:text-brand-orange transition-colors">{item.title}</h3>
-                <p className="text-slate-600 text-lg leading-relaxed font-medium">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* How We Advocate Section - Light Theme Redesign */}
       <section id="advocacy" className="bg-white py-32 px-6 relative overflow-hidden">
@@ -217,6 +161,63 @@ export default function AboutPage() {
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
                   <ArrowRight className="text-brand-orange h-4 w-4" />
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* Our Focus Area - 3 Card Grid */}
+      <section id="focus" className="section-padding bg-slate-50 relative overflow-hidden">
+        <div className="absolute inset-0 square-grid opacity-20"></div>
+        <div className="mx-auto max-w-7xl relative z-10">
+          <div className="text-center mb-20">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeIn}
+            >
+              <h2 className="text-brand-orange font-bold uppercase tracking-[0.2em] text-sm mb-4">Core Commitments</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-slate-900 leading-tight">
+                Our <span className="header-highlight highlight-cyan text-slate-900">Focus</span>
+              </h3>
+            </motion.div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Gender Justice",
+                desc: "Amplifying voices of women and marginalized genders in frontline communities. We advocate for equal participation in decision-making and policies that address systemic inequalities.",
+                icon: <Heart className="h-8 w-8" />,
+                color: "text-rose-600 bg-rose-50"
+              },
+              {
+                title: "Environment Justice",
+                desc: "Advocating for communities in oil-sacrificed zones. We demand accountability from polluters and ensure a just transition that is inclusive of those most affected by environmental harm.",
+                icon: <Scale className="h-8 w-8" />,
+                color: "text-brand-navy bg-navy-50"
+              },
+              {
+                title: "Society",
+                desc: "Empowering communities to challenge systemic injustices. We co-create solutions that prioritize human and ecological well-being, building a foundation for true societal progress.",
+                icon: <Users className="h-8 w-8" />,
+                color: "text-emerald-600 bg-emerald-50"
+              }
+            ].map((item, i) => (
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 transition-all hover:shadow-2xl hover:-translate-y-2 flex flex-col items-center text-center"
+              >
+                <div className={`mb-8 flex h-20 w-20 items-center justify-center rounded-3xl transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 shadow-lg ${item.color}`}>
+                  {item.icon}
+                </div>
+                <h3 className="text-2xl font-black mb-4 text-slate-900 group-hover:text-brand-orange transition-colors">{item.title}</h3>
+                <p className="text-slate-600 text-lg leading-relaxed font-medium">{item.desc}</p>
               </motion.div>
             ))}
           </div>
