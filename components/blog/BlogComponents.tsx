@@ -13,79 +13,95 @@ interface BlogPost {
   excerpt: string;
   image?: string;
   category: string;
+  section?: string;
   author: string;
   rating?: number;
 }
 
 export function BlogCard({ post, index }: { post: BlogPost; index: number }) {
-  // Defensive check for image to avoid "Image missing required src property: {}"
-  // This handles cases where post.image might be an empty string, null, or an unexpected object
+  // Defensive check for image
   const validImage = typeof post.image === 'string' && post.image.trim().length > 0;
   const imageUrl = validImage ? post.image as string : "/images/gallery/IMG_2023.JPG";
 
-  const dateObj = new Date(post.date);
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const day = String(dateObj.getDate()).padStart(2, '0');
-  const catSlug = (post.category || "insight").toLowerCase();
+  // Robust Date Handling for URL construction
+  const dateObj = new Date(post.date || Date.now());
+  const isValidDate = !isNaN(dateObj.getTime());
+  
+  const formattedDate = isValidDate ? dateObj.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }) : "Recent Story";
+  
+  const year = isValidDate ? dateObj.getFullYear() : new Date().getFullYear();
+  const month = isValidDate ? String(dateObj.getMonth() + 1).padStart(2, '0') : '01';
+  const day = isValidDate ? String(dateObj.getDate()).padStart(2, '0') : '01';
+  
+  // URL Construction: Handle category/section fallback
+  const catSlug = (post.category || post.section || "insight").toLowerCase().trim().replace(/\s+/g, '-');
   const articleUrl = `/${catSlug}/${year}/${month}/${day}/${post.slug}`;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group"
+      transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+      className="group h-full"
     >
       <Link 
         href={articleUrl}
-        className="flex flex-col h-full overflow-hidden rounded-[2.5rem] bg-white shadow-xl transition-all hover:shadow-2xl hover:-translate-y-2 border border-slate-100"
+        className="flex flex-col h-full overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 active:scale-[0.98] group/card"
       >
-        <div className="relative aspect-video overflow-hidden">
+        {/* Image Container */}
+        <div className="relative aspect-video overflow-hidden shrink-0">
           <Image
             src={imageUrl}
             alt={post.title || "Blog Post"}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            className="object-cover transition-transform duration-700 group-hover/card:scale-110"
           />
-          <div className="absolute top-6 left-6">
-            <span className="rounded-full bg-brand-forest/90 backdrop-blur-md px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-lg">
-              {post.category}
+          {/* Subtle Overlay on Hover */}
+          <div className="absolute inset-0 bg-linear-to-t from-slate-900/40 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="absolute top-6 left-6 z-10">
+            <span className="rounded-full bg-white/20 backdrop-blur-md px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white border border-white/30 shadow-xl">
+              {post.category || post.section}
             </span>
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col p-8 md:p-10">
-          <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-bold uppercase tracking-widest text-slate-400">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-brand-cyan" />
-              {post.date}
-            </div>
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-brand-teal" />
-              {post.author}
+        {/* Content Area */}
+        <div className="flex flex-1 flex-col p-8 lg:p-10">
+          <div className="mb-6 flex items-center justify-between">
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
+               <span className="text-brand-cyan">{formattedDate}</span>
+               <span className="h-1 w-1 rounded-full bg-slate-200"></span>
+               <span className="text-brand-teal">{post.author}</span>
             </div>
             {post.rating !== undefined && post.rating > 0 && (
-              <div className="flex items-center gap-2 text-amber-500 bg-amber-50 px-3 py-1 rounded-full">
+              <div className="flex items-center gap-1.5 text-amber-500 bg-amber-50 px-2.5 py-1 rounded-xl text-[10px] font-black">
                 <Star className="h-3 w-3 fill-amber-500" />
                 {post.rating.toFixed(1)}
               </div>
             )}
           </div>
 
-          <h3 className="mb-4 text-2xl font-extrabold leading-tight text-slate-900 group-hover:text-brand-forest transition-colors line-clamp-2">
+          <h3 className="mb-4 text-2xl font-black leading-tight text-slate-900 group-hover/card:text-brand-forest transition-colors line-clamp-2 tracking-tight">
             {post.title}
           </h3>
 
-          <p className="mb-8 text-slate-600 line-clamp-3 leading-relaxed">
+          <p className="mb-8 text-slate-500 text-[15px] leading-relaxed font-medium line-clamp-3">
             {post.excerpt}
           </p>
 
-          <div className="mt-auto pt-6 border-t border-slate-100">
-            <div className="inline-flex items-center gap-2 font-bold text-brand-forest transition-all group-hover:gap-3">
-              Read Perspective
-              <ArrowRight size={18} />
+          <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between pointer-events-none">
+             <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-brand-forest transition-all group-hover/card:gap-3">
+              Read Story
+              <ArrowRight size={14} className="transition-transform group-hover/card:translate-x-1" />
+            </div>
+            <div className="h-10 w-10 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover/card:bg-brand-forest/10 group-hover/card:text-brand-forest transition-all">
+               <ArrowRight size={18} />
             </div>
           </div>
         </div>

@@ -16,13 +16,12 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createBlogPost, updateBlogPost } from "@/lib/actions/blog";
+import { refineContent } from "@/lib/actions/chat";
 import { toast } from "sonner";
 import ImageSelector from "./ImageSelector";
 import { cn } from "@/lib/utils";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || ""; 
 
 export default function HighlightEditor({ initialData }: { initialData?: any }) {
   const [title, setTitle] = useState(initialData?.title || "");
@@ -63,15 +62,16 @@ export default function HighlightEditor({ initialData }: { initialData?: any }) 
     if (!content) return toast.error("Enter some content first");
     setIsAiRefining(true);
     try {
-      const { GoogleGenerativeAI } = await import("@google/generative-ai");
-      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-      const prompt = `Refine this campaign highlight content for Rooted Rising. Keep it professional and high-impact. Return optimized HTML. Content: ${content}`;
-      const result = await model.generateContent(prompt);
-      const text = result.response.text();
-      setContent(text.replace(/```html|```/g, "").trim());
-      toast.success("AI Polished!");
+      const result = await refineContent(content, { title, excerpt, type: "highlight" });
+      
+      if (result.success && result.text) {
+        setContent(result.text);
+        toast.success("AI Polished!");
+      } else {
+        throw new Error(result.error || "Failed to refine content");
+      }
     } catch (error) {
+       console.error("AI Refinement error:", error);
        toast.error("AI Refinement Error");
     } finally {
       setIsAiRefining(false);

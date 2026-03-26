@@ -4,11 +4,8 @@ import { useState } from "react";
 import { Plus, X, Loader2, Sparkles } from "lucide-react";
 import CloudinaryUpload from "./CloudinaryUpload";
 import { createTeamMember, updateTeamMember } from "@/lib/actions/team";
+import { refineContent } from "@/lib/actions/chat";
 import { toast } from "sonner";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""; 
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 interface TeamMemberFormProps {
   initialData?: any;
@@ -43,34 +40,20 @@ export default function TeamMemberForm({ initialData, onSuccess, onCancel }: Tea
 
     setIsAiRefining(true);
     try {
-      // Using 2.5-flash as requested
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-      const prompt = isGenerating 
-        ? `Write a professional, 2-3 sentence bio for a team member of the Rooted Rising Initiative.
-           Name: ${formData.name}
-           Role: ${formData.role}
-           Context: Rooted Rising focuses on climate action and gender equality through storytelling, art, and grassroots activism.
-           Tone: Professional, inspiring, and impactful.
-           CRITICAL: Return ONLY plain text. NO markdown (no bold, no italics), NO hashtags.`
-        : `Refine this professional bio for a team member of the Rooted Rising Initiative.
-           Team Member: ${formData.name} (${formData.role})
-           Current Bio: ${formData.bio}
-           Task: Make it more engaging, professional, and impactful. 
-           CRITICAL: Return ONLY plain text. NO markdown, NO hashtags.`;
-
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text().trim();
-      
-      // Clean up any markdown code blocks if the model wrapped them
-      const cleanText = text.replace(/```[a-z]*\n?|```/gi, "").replace(/[*_#`~]/g, "").trim();
-      
-      setFormData({ ...formData, bio: cleanText });
-      
-      toast.success(isGenerating ? "Bio Generated!" : "Bio Refined!", {
-        description: isGenerating ? "AI has drafted a profile based on the member's role." : "AI has polished the bio for maximum impact."
+      const result = await refineContent(formData.bio, { 
+        title: formData.name, 
+        excerpt: formData.role, 
+        type: "bio" 
       });
+
+      if (result.success && result.text) {
+        setFormData({ ...formData, bio: result.text });
+        toast.success(isGenerating ? "Bio Generated!" : "Bio Refined!", {
+          description: isGenerating ? "AI has drafted a profile based on the member's role." : "AI has polished the bio for maximum impact."
+        });
+      } else {
+        throw new Error(result.error || "Failed to refine bio");
+      }
     } catch (error) {
       console.error("AI Action error:", error);
       toast.error("AI Service Error", {

@@ -57,3 +57,53 @@ export async function generateChatResponse(history: { role: "user" | "model", pa
     return { error: "Failed to connect to the AI service." };
   }
 }
+
+export async function refineContent(content: string, options?: { title?: string; excerpt?: string; type?: "blog" | "highlight" | "bio" | "chat" }) {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const { title, excerpt, type = "blog" } = options || {};
+    
+    let prompt = "";
+
+    if (type === "bio") {
+      const isGenerating = !content;
+      prompt = isGenerating 
+        ? `Write a professional, 2-3 sentence bio for a team member of the Rooted Rising Initiative.
+           Name: ${title || "Team Member"}
+           Role: ${excerpt || "Staff"}
+           Context: Rooted Rising focuses on climate action and gender equality through storytelling, art, and grassroots activism.
+           Tone: Professional, inspiring, and impactful.
+           CRITICAL: Return ONLY plain text. NO markdown (no bold, no italics), NO hashtags.`
+        : `Refine this professional bio for a team member of the Rooted Rising Initiative.
+           Team Member: ${title || ""} (${excerpt || ""})
+           Current Bio: ${content}
+           Task: Make it more engaging, professional, and impactful. 
+           CRITICAL: Return ONLY plain text. NO markdown, NO hashtags.`;
+    } else {
+      prompt = `Refine this ${type === "highlight" ? "campaign highlight" : "blog post"} content for the Rooted Rising Initiative. 
+      Make it professional, engaging, and impactful. The initiative focuses on climate action and gender equality through storytelling, art, and grassroots activism.
+      Return the refined content in HTML format suitable for a blog post.
+      `;
+
+      if (title) prompt += `\nTitle: ${title}`;
+      if (excerpt) prompt += `\nExcerpt: ${excerpt}`;
+      prompt += `\n\nCurrent Content: ${content}`;
+    }
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    // Basic cleanup if Gemini wraps in markdown code blocks
+    let cleanText = text.replace(/```[a-z]*\n?|```/gi, "").trim();
+    
+    if (type === "bio") {
+      cleanText = cleanText.replace(/[*_#`~]/g, "").trim();
+    }
+    
+    return { success: true, text: cleanText };
+  } catch (error) {
+    console.error("AI Refinement error:", error);
+    return { error: "Failed to connect to the AI service." };
+  }
+}

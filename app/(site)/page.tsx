@@ -94,7 +94,7 @@ export default async function Home() {
   const blogPosts = blogPostsData.map(post => ({
     slug: post.slug,
     title: post.title,
-    date: new Date(post.createdAt).toLocaleDateString(),
+    date: post.createdAt instanceof Date ? post.createdAt.toISOString() : new Date(post.createdAt).toISOString(),
     excerpt: createExcerpt(post.content),
     image: post.image,
     category: post.section,
@@ -108,7 +108,7 @@ export default async function Home() {
   const homeCampaigns = allCampaigns.slice(0, 3).map(post => ({
     slug: post.slug,
     title: post.title,
-    date: new Date(post.createdAt).toLocaleDateString(),
+    date: new Date(post.createdAt).toISOString(),
     excerpt: post.excerpt,
     image: post.image,
     category: "campaigns",
