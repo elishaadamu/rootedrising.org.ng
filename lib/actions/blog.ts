@@ -76,7 +76,7 @@ export async function getBlogCategoriesWithCount() {
 export async function createBlogPost(data: { title: string; excerpt: string; content: string; image: string; section?: string; published?: boolean }) {
   const session = await getSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || !["ADMIN", "EDITOR"].includes(session.role as string)) {
     return { error: "Unauthorized" };
   }
 
@@ -134,7 +134,7 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
 export async function updateBlogPost(id: string, data: { title: string; excerpt: string; content: string; image: string; section?: string; published?: boolean }) {
   const session = await getSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || !["ADMIN", "EDITOR"].includes(session.role as string)) {
     return { error: "Unauthorized" };
   }
 
@@ -186,7 +186,7 @@ export async function updateBlogPost(id: string, data: { title: string; excerpt:
 
 export async function deletePost(id: string) {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") return { error: "Unauthorized" };
+  if (!session || !["ADMIN", "EDITOR"].includes(session.role as string)) return { error: "Unauthorized" };
 
   try {
     await prisma.post.delete({ where: { id } });
@@ -205,7 +205,7 @@ export async function deletePost(id: string) {
 
 export async function syncMarkdownPosts() {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") return { error: "Unauthorized" };
+  if (!session || !["ADMIN", "EDITOR"].includes(session.role as string)) return { error: "Unauthorized" };
 
   try {
     const mdPosts = getAllPosts();
@@ -256,7 +256,7 @@ export async function syncMarkdownPosts() {
 
 export async function normalizeBlogSections() {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") return { error: "Unauthorized" };
+  if (!session || !["ADMIN", "EDITOR"].includes(session.role as string)) return { error: "Unauthorized" };
 
   try {
     const mappings = [
@@ -331,7 +331,7 @@ export async function deleteComment(id: string) {
     const comment = await prisma.comment.findUnique({ where: { id } });
     if (!comment) return { error: "Comment not found" };
 
-    if (session.role !== "ADMIN" && session.id !== comment.userId) {
+    if (!["ADMIN", "EDITOR"].includes(session.role as string) && session.id !== comment.userId) {
       return { error: "Unauthorized" };
     }
 
@@ -368,7 +368,7 @@ export async function updateComment(id: string, data: { content: string; rating:
     const existingComment = await prisma.comment.findUnique({ where: { id } });
     if (!existingComment) return { error: "Comment not found" };
 
-    if (session.role !== "ADMIN" && session.id !== existingComment.userId) {
+    if (!["ADMIN", "EDITOR"].includes(session.role as string) && session.id !== existingComment.userId) {
       return { error: "Unauthorized" };
     }
 

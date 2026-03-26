@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""; 
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || ""; 
 
 const PLACEHOLDER_IMAGE = "https://blocks.astratic.com/img/general-img-landscape.png";
 
