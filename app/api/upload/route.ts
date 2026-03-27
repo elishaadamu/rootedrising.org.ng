@@ -10,6 +10,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
+    console.log(`Received file for upload: ${file.name}, size: ${file.size} bytes`);
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 

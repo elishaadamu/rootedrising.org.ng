@@ -8,6 +8,40 @@ import ReactMarkdown from "react-markdown";
 import ShareButtons from "@/components/blog/ShareButtons";
 import CommentSection from "@/components/blog/CommentSection";
 import { getSession } from "@/lib/actions/auth";
+import { Metadata } from 'next';
+import { createWordExcerpt } from "@/lib/utils";
+
+export async function generateMetadata(props: {
+  params: Promise<{ year: string, month: string, day: string, slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await props.params;
+  
+  const mdCampaign = getCampaignBySlug(slug);
+  const dbCampaign = !mdCampaign ? await prisma.post.findUnique({
+    where: { slug },
+  }) : null;
+
+  const campaign = (mdCampaign || dbCampaign) as any;
+  if (!campaign) return { title: 'Campaign Not Found' };
+
+  const description = campaign.excerpt || createWordExcerpt(campaign.content, 10);
+
+  return {
+    title: campaign.title,
+    description,
+    openGraph: {
+      title: campaign.title,
+      description,
+      images: campaign.image ? [campaign.image] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: campaign.title,
+      description,
+      images: campaign.image ? [campaign.image] : [],
+    }
+  };
+}
 
 export default async function CampaignDetailPage(props: {
   params: Promise<{
@@ -138,7 +172,7 @@ export default async function CampaignDetailPage(props: {
                 <div>
                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Contributor</p>
                    <p className="text-sm font-black text-slate-900">
-                    {isMarkdown ? (campaign.author || "Rooted Rising") : (campaign.author?.name || "Rooted Rising")}
+                    Rooted Rising
                    </p>
                 </div>
              </div>

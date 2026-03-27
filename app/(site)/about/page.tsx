@@ -76,56 +76,56 @@ export default function AboutPage() {
               {
                 title: "Research",
                 desc: "Gathering data and lived experiences to inform our campaigns and debunk false solutions.",
-                image: "/images/rooted-rising-inititiative.png",
+                image: "/images/about/research.png",
                 color: "from-slate-100 to-transparent",
                 border: "border-slate-200"
               },
               {
                 title: "Storytelling",
                 desc: "Documenting personal narratives that drive empathy and demand climate justice.",
-                image: "/images/Stories.jpeg",
+                image: "/images/about/Stories.jpeg",
                 color: "from-brand-orange/10 to-transparent",
                 border: "border-brand-orange/10"
               },
               {
                 title: "Art",
                 desc: "Leveraging visual creativity as a universal language for environmental mobilization.",
-                image: "/images/art.jpeg",
+                image: "/images/about/art.jpeg",
                 color: "from-brand-cyan/10 to-transparent",
                 border: "border-brand-cyan/10"
               },
               {
                 title: "Poems",
                 desc: "Using the power of verse to inspire reflection and ignite critical thinking about climate issues.",
-                image: "/images/let her be.jpg",
+                image: "/images/about/poems.jpeg",
                 color: "from-brand-forest/10 to-transparent",
                 border: "border-brand-forest/10"
               },
               {
                 title: "Podcast",
                 desc: "Engaging audiences through deep-seated dialogues and expert insights on social justice.",
-                image: "/images/video.png",
+                image: "/images/about/podcast.jpeg",
                 color: "from-brand-navy/10 to-transparent",
                 border: "border-brand-navy/10"
               },
               {
                 title: "Short explainers",
                 desc: "Breaking down complex climate concepts into simple, relatable media formats.",
-                image: "/images/campaign-hero.jpg",
+                image: "/images/about/short-explainers.jpeg",
                 color: "from-yellow-100/30 to-transparent",
                 border: "border-yellow-200"
               },
               {
                 title: "Trainings",
                 desc: "Empowering youth and communities with the tools and knowledge for effective advocacy.",
-                image: "/images/training.jpeg",
+                image: "/images/about/training.jpeg",
                 color: "from-emerald-100/20 to-transparent",
                 border: "border-emerald-200"
               },
               {
                 title: "Community Engagement",
                 desc: "Building collective power through dialogue, collaboration, and grassroots action.",
-                image: "/images/community.jpeg",
+                image: "/images/about/community.jpeg",
                 color: "from-brand-forest/10 to-transparent",
                 border: "border-brand-forest/10"
               }

@@ -10,6 +10,7 @@ import { getBlogCategoriesWithCount } from "@/lib/actions/blog";
 import { Calendar, User as UserIcon, Star } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from 'next';
+import { createWordExcerpt } from "@/lib/utils";
 
 export async function generateMetadata(props: { 
   params: Promise<{ category: string, year: string, month: string, day: string, slug: string }> 
@@ -18,7 +19,7 @@ export async function generateMetadata(props: {
   const mdPost = getPostBySlug(slug);
   
   if (mdPost) {
-    const description = mdPost.excerpt || mdPost.content.substring(0, 160).replace(/<[^>]*>?/gm, '');
+    const description = mdPost.excerpt || createWordExcerpt(mdPost.content, 10);
     return {
       title: mdPost.title,
       description,
@@ -41,7 +42,7 @@ export async function generateMetadata(props: {
   });
 
   if (dbPost) {
-    const description = dbPost.excerpt || dbPost.content.substring(0, 160).replace(/<[^>]*>?/gm, '');
+    const description = dbPost.excerpt || createWordExcerpt(dbPost.content, 10);
     return {
       title: dbPost.title,
       description,
@@ -115,7 +116,7 @@ export default async function DynamicBlogPostPage(props: {
     title: mdPost.title,
     content: mdPost.content,
     image: mdPost.image,
-    author: { name: mdPost.author },
+    author: { name: "Rooted Rising" },
     createdAt: mdPost.date,
     section: mdPost.category,
     comments: [],
@@ -164,11 +165,11 @@ export default async function DynamicBlogPostPage(props: {
               <div className="flex flex-wrap items-center gap-8 mb-16 py-8 border-y border-slate-100">
                 <div className="flex items-center gap-3">
                     <div className="h-12 w-12 rounded-2xl bg-brand-forest/10 text-brand-forest flex items-center justify-center font-bold">
-                      {(post.author as any).name?.charAt(0)}
+                      R
                     </div>
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Published by</p>
-                      <p className="text-sm font-black text-slate-900">{(post.author as any).name}</p>
+                      <p className="text-sm font-black text-slate-900">Rooted Rising</p>
                     </div>
                 </div>
 

@@ -18,8 +18,8 @@ export default function CloudinaryUpload({ onUpload, defaultValue }: CloudinaryU
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.size > 5 * 1024 * 1024) {
-        toast.error("File too large", { description: "Maximum size is 5MB" });
+      if (selectedFile.size > 4 * 1024 * 1024) {
+        toast.error("File too large", { description: "Maximum size for direct uploads is 4MB" });
         return;
       }
       setFile(selectedFile);
@@ -35,14 +35,15 @@ export default function CloudinaryUpload({ onUpload, defaultValue }: CloudinaryU
     formData.append("upload_preset", "rootedrising_preset"); 
 
     try {
-      // For simplicity in this demo, we'll use a server action if we have one, 
-      // but client-side unsigned upload is easiest for quick setup if the user has a preset.
-      // However, the user asked to "use cloudinary", usually implying server-side logic in an "agent" context.
-      
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Upload failed with status ${response.status}`);
+      }
 
       const data = await response.json();
       if (data.url) {
@@ -54,7 +55,11 @@ export default function CloudinaryUpload({ onUpload, defaultValue }: CloudinaryU
       }
     } catch (error: any) {
       console.error("Upload error:", error);
-      toast.error("Upload failed", { description: error.message });
+      toast.error("Upload failed", { 
+        description: error.message?.includes("Unexpected token") 
+          ? "The server rejected the file. It might be too large."
+          : error.message 
+      });
     } finally {
       setIsUploading(false);
     }

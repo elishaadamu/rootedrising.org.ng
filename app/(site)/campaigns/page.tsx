@@ -89,7 +89,7 @@ export default async function CampaignsPage() {
       excerpt: p.excerpt || "",
       image: p.image || "/images/placeholder.png",
       category: "Campaigns",
-      author: (p.author as any)?.name || "Rooted Rising",
+      author: "Rooted Rising",
       rating: p.comments.length > 0 
         ? p.comments.reduce((acc: number, curr: { rating: number }) => acc + curr.rating, 0) / p.comments.length 
         : 0,

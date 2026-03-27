@@ -67,7 +67,7 @@ export default async function Home() {
       excerpt: p.excerpt || createExcerpt(p.content),
       image: p.image || "/images/placeholder.png",
       category: "campaigns",
-      author: p.author?.name || "Rooted Rising",
+      author: "Rooted Rising",
       rating: avgRating,
       isMarkdown: false,
       published: p.published // Crucial: use the DB published flag
@@ -98,7 +98,7 @@ export default async function Home() {
     excerpt: createExcerpt(post.content),
     image: post.image,
     category: post.section,
-    author: post.author?.name || "Rooted Rising",
+    author: "Rooted Rising",
     rating: post.comments.length > 0 
       ? post.comments.reduce((acc: number, curr: any) => acc + curr.rating, 0) / post.comments.length 
       : 0
@@ -112,7 +112,7 @@ export default async function Home() {
     excerpt: post.excerpt,
     image: post.image,
     category: "campaigns",
-    author: typeof post.author === 'string' ? post.author : (post.author?.name || "Rooted Rising"),
+    author: "Rooted Rising",
     rating: post.rating || 0
   }));
   

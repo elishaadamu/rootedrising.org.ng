@@ -52,7 +52,7 @@ export default async function CategoryListingPage({
       ...p,
       createdAt: p.date,
       section: p.category,
-      author: { name: p.author },
+      author: { name: "Rooted Rising" },
       comments: [],
       isMarkdown: true
     })),
@@ -110,7 +110,7 @@ export default async function CategoryListingPage({
                 <BlogCard key={post.slug} post={{
                   ...post,
                   date: new Date(post.createdAt).toISOString(),
-                  author: post.author?.name || "Rooted Rising",
+                  author: "Rooted Rising",
                   rating: avgRating,
                   category: post.section,
                   excerpt: createExcerpt(post.content)

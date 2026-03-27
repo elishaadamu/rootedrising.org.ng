@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { sendEmail, sendBulkEmail } from "@/lib/mail";
 import { getSession } from "./auth";
 import { recordActivity } from "./logs";
+import { createWordExcerpt } from "@/lib/utils";
 
 export async function subscribeNewsletter(formData: FormData) {
   const email = formData.get("email") as string;
@@ -174,6 +175,7 @@ export async function sendCampaign(formData: FormData) {
 export async function notifySubscribersOfNewPost(post: { 
   title: string; 
   excerpt: string; 
+  content?: string;
   slug: string; 
   section?: string; 
   image?: string;
@@ -201,6 +203,8 @@ export async function notifySubscribersOfNewPost(post: {
       ? (post.image.startsWith('http') ? post.image : `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}${post.image.startsWith('/') ? '' : '/'}${post.image}`)
       : null;
 
+    const emailExcerpt = createWordExcerpt(post.content || post.excerpt, 10);
+
     return await sendBulkEmail({
       emails,
       subject: `${subjectPrefix}: ${post.title} 🌍`,
@@ -217,7 +221,7 @@ export async function notifySubscribersOfNewPost(post: {
           ${fullImageUrl ? `<div style="margin-bottom: 25px;"><img src="${fullImageUrl}" alt="${post.title}" style="width: 100%; border-radius: 15px; max-height: 300px; object-fit: cover;" /></div>` : ''}
           
           <h2 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 10px;">${post.title}</h2>
-          <p style="font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 25px;">${post.excerpt || 'Read our latest insights on climate resilience and sustainable development.'}</p>
+          <p style="font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 25px;">${emailExcerpt}</p>
           
           <div style="text-align: center; margin-bottom: 30px;">
             <a href="${postUrl}" style="background-color: #1A233E; color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; display: inline-block;">Continue Reading</a>
