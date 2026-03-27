@@ -19,7 +19,7 @@ export async function generateMetadata(props: {
   const mdPost = getPostBySlug(slug);
   
   if (mdPost) {
-    const description = mdPost.excerpt || createWordExcerpt(mdPost.content, 10);
+    const description = mdPost.excerpt || createWordExcerpt(mdPost.content, 20);
     return {
       title: mdPost.title,
       description,
@@ -42,7 +42,7 @@ export async function generateMetadata(props: {
   });
 
   if (dbPost) {
-    const description = dbPost.excerpt || createWordExcerpt(dbPost.content, 10);
+    const description = dbPost.excerpt || createWordExcerpt(dbPost.content, 20);
     return {
       title: dbPost.title,
       description,

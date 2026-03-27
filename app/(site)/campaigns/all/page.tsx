@@ -4,6 +4,7 @@ import { getAllCampaigns } from "@/lib/campaigns";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { createWordExcerpt } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +55,7 @@ export default async function AllCampaignsPage(props: {
       slug: p.slug,
       title: p.title,
       date: p.createdAt.toISOString(),
-      excerpt: p.excerpt || "",
+      excerpt: p.excerpt || createWordExcerpt(p.content, 20),
       image: p.image || "/images/placeholder.png",
       category: "Campaign",
       author: "Rooted Rising",

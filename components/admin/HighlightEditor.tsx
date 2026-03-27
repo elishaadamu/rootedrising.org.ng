@@ -29,6 +29,7 @@ export default function HighlightEditor({ initialData }: { initialData?: any }) 
   const [content, setContent] = useState(initialData?.content || "");
   const [image, setImage] = useState(initialData?.image || "/images/placeholder.png");
   const [published, setPublished] = useState(initialData?.published ?? false);
+  const [createdAt, setCreatedAt] = useState(initialData?.createdAt ? new Date(initialData.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
   const [isAiRefining, setIsAiRefining] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [isPreview, setIsPreview] = useState(false);
@@ -43,7 +44,7 @@ export default function HighlightEditor({ initialData }: { initialData?: any }) 
     }
 
     startTransition(async () => {
-      const data = { title, excerpt, content, image, section: "Campaigns", published: status };
+      const data = { title, excerpt, content, image, section: "Campaigns", published: status, createdAt };
       const res = initialData?.id 
         ? await updateBlogPost(initialData.id, data)
         : await createBlogPost(data);
@@ -199,7 +200,19 @@ export default function HighlightEditor({ initialData }: { initialData?: any }) 
               />
            </div>
 
-           <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white space-y-6">
+           <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white space-y-8">
+              <div className="space-y-4">
+                 <p className="text-[10px] font-black uppercase tracking-widest text-brand-orange mb-1">Post Date</p>
+                 <input 
+                   type="date" 
+                   value={createdAt}
+                   onChange={(e) => setCreatedAt(e.target.value)}
+                   className="w-full bg-slate-800 border-none rounded-2xl px-5 py-4 text-sm font-black text-white focus:outline-none focus:ring-4 focus:ring-brand-orange/20 transition-all cursor-pointer"
+                 />
+              </div>
+              
+              <div className="h-px bg-white/10 w-full"></div>
+
               <div className="flex items-center justify-between">
                  <div>
                     <p className="text-[10px] font-black uppercase tracking-widest text-brand-orange mb-1">Article Status</p>

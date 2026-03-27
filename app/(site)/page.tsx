@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import HomeClient from "@/components/home/HomeClient";
 import { getAllCampaigns } from "@/lib/campaigns";
+import { createWordExcerpt } from "@/lib/utils";
 
 // A simple utility to strip HTML tags and truncate text for the preview excerpt
 function createExcerpt(htmlContent: string, maxLength: number = 150) {
@@ -64,7 +65,7 @@ export default async function Home() {
       slug: p.slug,
       title: p.title,
       createdAt: p.createdAt.toISOString(),
-      excerpt: p.excerpt || createExcerpt(p.content),
+      excerpt: p.excerpt || createWordExcerpt(p.content, 20),
       image: p.image || "/images/placeholder.png",
       category: "campaigns",
       author: "Rooted Rising",
@@ -95,7 +96,7 @@ export default async function Home() {
     slug: post.slug,
     title: post.title,
     date: post.createdAt instanceof Date ? post.createdAt.toISOString() : new Date(post.createdAt).toISOString(),
-    excerpt: createExcerpt(post.content),
+    excerpt: createWordExcerpt(post.content, 20),
     image: post.image,
     category: post.section,
     author: "Rooted Rising",

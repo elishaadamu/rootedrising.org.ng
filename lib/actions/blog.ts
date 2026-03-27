@@ -73,14 +73,14 @@ export async function getBlogCategoriesWithCount() {
 }
 
 
-export async function createBlogPost(data: { title: string; excerpt: string; content: string; image: string; section?: string; published?: boolean }) {
+export async function createBlogPost(data: { title: string; excerpt: string; content: string; image: string; section?: string; published?: boolean; createdAt?: string }) {
   const session = await getSession();
 
   if (!session || !["ADMIN", "EDITOR"].includes(session.role as string)) {
     return { error: "Unauthorized" };
   }
 
-  const { title, excerpt, content, image, section = "Story", published = false } = data;
+  const { title, excerpt, content, image, section = "Story", published = false, createdAt } = data;
 
   if (!title || !content) {
     return { error: "Title and content are required" };
@@ -102,6 +102,7 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
         authorId: session.id as string,
         published,
         section,
+        createdAt: createdAt ? new Date(createdAt) : undefined,
       },
     });
 
@@ -115,6 +116,7 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
       await notifySubscribersOfNewPost({ 
         title, 
         excerpt, 
+        content,
         slug, 
         section, 
         image,
@@ -124,6 +126,9 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
 
     revalidatePath("/blog");
     revalidatePath("/admin/blog");
+    revalidatePath("/campaigns");
+    revalidatePath("/admin/highlights");
+    revalidatePath("/");
     return { success: true, post };
   } catch (error) {
     console.error("Create blog post error:", error);
@@ -131,14 +136,14 @@ export async function createBlogPost(data: { title: string; excerpt: string; con
   }
 }
 
-export async function updateBlogPost(id: string, data: { title: string; excerpt: string; content: string; image: string; section?: string; published?: boolean }) {
+export async function updateBlogPost(id: string, data: { title: string; excerpt: string; content: string; image: string; section?: string; published?: boolean; createdAt?: string }) {
   const session = await getSession();
 
   if (!session || !["ADMIN", "EDITOR"].includes(session.role as string)) {
     return { error: "Unauthorized" };
   }
 
-  const { title, excerpt, content, image, section, published } = data;
+  const { title, excerpt, content, image, section, published, createdAt } = data;
 
   if (!title || !content) {
     return { error: "Title and content are required" };
@@ -160,6 +165,7 @@ export async function updateBlogPost(id: string, data: { title: string; excerpt:
         slug,
         section,
         published,
+        createdAt: createdAt ? new Date(createdAt) : undefined,
       },
     });
 
@@ -170,12 +176,30 @@ export async function updateBlogPost(id: string, data: { title: string; excerpt:
     });
 
     if (published) {
-      await notifySubscribersOfNewPost({ title, excerpt, slug, section, image });
+      await notifySubscribersOfNewPost({ 
+        title, 
+        excerpt, 
+        content,
+        slug, 
+        section, 
+        image,
+        createdAt: post.createdAt
+      });
     }
+
+    const d = new Date(post.createdAt);
+    const yr = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const dy = String(d.getDate()).padStart(2, '0');
+    const cat = (post.section || "insight").toLowerCase();
 
     revalidatePath("/blog");
     revalidatePath("/admin/blog");
-    revalidatePath(`/blog/${post.slug}`);
+    revalidatePath("/campaigns");
+    revalidatePath("/admin/highlights");
+    revalidatePath("/");
+    revalidatePath(`/${cat}/${yr}/${mo}/${dy}/${post.slug}`);
+    revalidatePath(`/campaigns/${yr}/${mo}/${dy}/${post.slug}`);
     return { success: true, post };
   } catch (error) {
     console.error("Update blog post error:", error);

@@ -6,6 +6,7 @@ import { getAllCampaigns } from "@/lib/campaigns";
 import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink, ArrowRight, Star } from "lucide-react";
+import { createWordExcerpt } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Our Campaigns",
@@ -86,7 +87,7 @@ export default async function CampaignsPage() {
       slug: p.slug,
       title: p.title,
       date: p.createdAt.toISOString(),
-      excerpt: p.excerpt || "",
+      excerpt: p.excerpt || createWordExcerpt(p.content, 20),
       image: p.image || "/images/placeholder.png",
       category: "Campaigns",
       author: "Rooted Rising",

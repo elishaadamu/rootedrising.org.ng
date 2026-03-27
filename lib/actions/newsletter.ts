@@ -203,7 +203,7 @@ export async function notifySubscribersOfNewPost(post: {
       ? (post.image.startsWith('http') ? post.image : `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}${post.image.startsWith('/') ? '' : '/'}${post.image}`)
       : null;
 
-    const emailExcerpt = createWordExcerpt(post.content || post.excerpt, 10);
+    const emailExcerpt = createWordExcerpt(post.content || post.excerpt, 20);
 
     return await sendBulkEmail({
       emails,

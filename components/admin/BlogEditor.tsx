@@ -38,6 +38,7 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
   const [isAiRefining, setIsAiRefining] = useState(false);
   const [section, setSection] = useState(initialData?.section || "Story");
   const [published, setPublished] = useState(initialData?.published ?? false);
+  const [createdAt, setCreatedAt] = useState(initialData?.createdAt ? new Date(initialData.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
   const [isFocused, setIsFocused] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -58,7 +59,8 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
         content, 
         image: image || PLACEHOLDER_IMAGE,
         section,
-        published: isPublished
+        published: isPublished,
+        createdAt,
       };
 
       if (initialData?.id) {
@@ -250,8 +252,19 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
               className="flex-1 text-xl sm:text-3xl font-black placeholder:text-slate-100 focus:outline-none transition-all"
             />
             
-            <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-slate-100 pt-4 sm:pt-0 sm:pl-6">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Section</label>
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 border-t sm:border-t-0 sm:border-l border-slate-100 pt-4 sm:pt-0 sm:pl-6">
+              <div className="flex items-center gap-3">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Date</label>
+                <input 
+                  type="date" 
+                  value={createdAt}
+                  onChange={(e) => setCreatedAt(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[11px] font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-forest/20"
+                />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Section</label>
               <select 
                 value={section}
                 onChange={(e) => setSection(e.target.value)}
@@ -264,6 +277,7 @@ export default function BlogEditor({ initialData }: { initialData?: any }) {
               </select>
             </div>
           </div>
+        </div>
 
           <div className="space-y-4 sm:space-y-6">
                 <div className={cn(
