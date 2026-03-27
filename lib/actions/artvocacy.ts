@@ -3,13 +3,26 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function createArtvocacy(data: { title: string; url: string; content?: string }) {
+export async function createArtvocacy(data: { title: string; url: string; content?: string; image?: string }) {
   try {
     const slug = data.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+    
+    // Auto-generate image from YouTube if not provided
+    let image = data.image || "";
+    if (!image && data.url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = data.url.match(regExp);
+      const ytId = (match && match[2].length === 11) ? match[2] : null;
+      if (ytId) {
+        image = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+      }
+    }
+
     const result = await (prisma as any).artvocacy.create({
       data: {
         id: slug,
         ...data,
+        image,
         active: true
       }
     });
@@ -21,11 +34,23 @@ export async function createArtvocacy(data: { title: string; url: string; conten
   }
 }
 
-export async function updateArtvocacy(id: string, data: { title: string; url: string; content?: string; active?: boolean }) {
+export async function updateArtvocacy(id: string, data: { title: string; url: string; content?: string; active?: boolean; image?: string }) {
   try {
+    const updateData = { ...data };
+    
+    // Auto-generate image from YouTube if not provided and url changed
+    if (!updateData.image && updateData.url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = updateData.url.match(regExp);
+      const ytId = (match && match[2].length === 11) ? match[2] : null;
+      if (ytId) {
+        updateData.image = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+      }
+    }
+
     const result = await (prisma as any).artvocacy.update({
       where: { id },
-      data
+      data: updateData
     });
     revalidatePath("/campaigns");
     revalidatePath("/admin/artvocacy");

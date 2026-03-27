@@ -19,6 +19,7 @@ export default function ArtvocacyEditor({ initialData, isEditing = false }: Artv
     title: initialData?.title || "",
     url: initialData?.url || "",
     content: initialData?.content || "",
+    image: initialData?.image || "",
     active: initialData?.active ?? true
   });
 

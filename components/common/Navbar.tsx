@@ -87,23 +87,23 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-xl border-b border-slate-100 transition-all duration-300 px-6 py-4 md:px-12 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link href="/" className="flex items-center gap-4 group shrink-0">
-          <div className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-white/50 shadow-lg transition-transform hover:scale-110">
+          <div className="relative h-16 w-16 overflow-hidden rounded-full border border-white/50 shadow-sm transition-transform hover:scale-105">
             <Image
               src="/images/logo.png"
               alt="Rooted Rising Logo"
               fill
-              className="object-cover"
+              className="object-cover p-0.5"
               priority
             />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-2xl md:text-3xl font-black text-brand-navy tracking-tighter">Rooted Rising</span>
-            <span className="text-[10px] md:text-xs mt-1 font-bold text-brand-orange tracking-widest uppercase">Development Media Initiative</span>
+            <span className="text-2xl md:text-[26px] font-extrabold text-brand-navy tracking-tight">Rooted Rising</span>
+            <span className="text-[10px] md:text-[11px] font-medium text-slate-500 tracking-widest uppercase mt-0.5">Development Media Initiative</span>
           </div>
         </Link>
 
         {/* Right-aligned Navigation and Actions */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 xl:flex">
           {navLinks.map((link) => {
             if (link.name === "Blogs") {
               return (
@@ -115,8 +115,8 @@ export default function Navbar() {
                 >
                   <button
                     className={cn(
-                      "flex items-center gap-1 text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
-                      pathname.startsWith("/blogs") ? "text-brand-orange" : "text-slate-600 hover:text-brand-navy"
+                      "flex items-center gap-1.5 text-[15px] font-medium transition-colors hover:text-brand-navy",
+                      pathname.startsWith("/blogs") ? "text-brand-orange" : "text-slate-600"
                     )}
                   >
                     {link.name}
@@ -126,24 +126,25 @@ export default function Navbar() {
                   <AnimatePresence>
                     {blogDropdownOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute left-0 mt-2 w-48 overflow-hidden rounded-2xl bg-slate-900 border border-white/10 shadow-2xl p-2 z-60"
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute left-0 mt-3 w-56 overflow-hidden rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-xl p-2 z-60"
                       >
                          {categories.map((cat) => (
                            <Link 
                              key={cat}
                              href={`/blogs/${cat.toLowerCase()}`}
-                             className="block w-full text-left p-3 rounded-xl text-xs font-black text-white/70 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest"
+                             className="block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:text-brand-navy hover:bg-slate-50/80 transition-colors"
                            >
                               {cat}
                            </Link>
                          ))}
-                         <div className="h-px bg-white/5 my-1 mx-2"></div>
+                         <div className="h-px bg-slate-100 my-2 mx-3"></div>
                          <Link 
                            href="/blogs"
-                           className="block w-full text-left p-3 rounded-xl text-[10px] font-black text-brand-orange/70 hover:text-brand-orange hover:bg-brand-orange/5 transition-all uppercase tracking-widest"
+                           className="block w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-brand-orange hover:bg-brand-orange/5 transition-colors"
                          >
                             All Stories
                          </Link>
@@ -159,8 +160,8 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 className={cn(
-                  "text-sm font-black transition-all hover:text-brand-orange uppercase tracking-wider",
-                  pathname === link.href ? "text-brand-orange" : "text-slate-600 hover:text-brand-navy"
+                  "relative text-[15px] font-medium transition-colors hover:text-brand-navy",
+                  pathname === link.href ? "text-brand-orange" : "text-slate-600"
                 )}
               >
                 {link.name}
@@ -168,11 +169,11 @@ export default function Navbar() {
             );
           })}
 
-          <div className="flex items-center gap-4 border-l border-slate-100 pl-8">
+          <div className="flex items-center gap-4 border-l border-slate-100 pl-8 ml-2">
             {/* Search Trigger Icon - Desktop Right End */}
             <button 
               onClick={() => setIsSearchModalOpen(true)}
-              className="p-3 rounded-full bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange hover:border-brand-orange hover:bg-slate-100 transition-all group shadow-sm active:scale-95 mr-2"
+              className="p-2.5 rounded-full text-slate-500 hover:text-brand-orange transition-all hover:bg-slate-50 hover:scale-105 active:scale-95 group"
               title="Search"
             >
               <Search size={22} className="transition-transform group-hover:scale-110" />
@@ -222,13 +223,13 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-black text-slate-600 transition-all hover:text-brand-orange uppercase tracking-wider"
+                  className="text-[15px] font-medium text-slate-600 transition-colors hover:text-brand-navy mr-2"
                 >
                   Log in
                 </Link>
                 <Link
                   href="/signup"
-                  className="rounded-full bg-brand-orange px-8 py-3 text-sm font-black text-white hover:text-black transition-all hover:bg-white hover:shadow-[0_0_20px_rgba(218,142,31,0.3)] active:scale-95 uppercase tracking-widest"
+                  className="rounded-full bg-brand-orange border border-brand-orange px-6 py-2.5 text-[15px] font-medium text-white transition-all hover:bg-transparent hover:text-brand-orange hover:shadow-lg hover:-translate-y-0.5"
                 >
                   Join Us
                 </Link>
@@ -239,7 +240,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
+          className="xl:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
@@ -254,7 +255,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden bg-brand-navy border-t border-white/5 mt-4 -mx-6 rounded-b-4xl shadow-2xl"
+            className="xl:hidden overflow-hidden bg-brand-navy border border-white/10 mt-3 rounded-3xl shadow-2xl pointer-events-auto max-h-[80vh] overflow-y-auto mx-auto max-w-7xl"
           >
             <div className="flex flex-col gap-1 p-6">
               {/* Mobile Search Trigger */}
@@ -275,7 +276,7 @@ export default function Navbar() {
                       <button
                         onClick={() => setMobileBlogOpen(!mobileBlogOpen)}
                         className={cn(
-                          "flex items-center justify-between p-4 rounded-2xl text-base font-black transition-all uppercase tracking-widest",
+                          "flex items-center justify-between p-4 rounded-2xl text-[17px] font-semibold transition-colors",
                           pathname.startsWith("/blogs") ? "bg-white/10 text-brand-orange" : "text-white/80 hover:bg-white/5"
                         )}
                       >
@@ -294,7 +295,7 @@ export default function Navbar() {
                               <Link
                                 key={cat}
                                 href={`/blogs/${cat.toLowerCase()}`}
-                                className="p-4 text-sm font-bold text-white/60 hover:text-white uppercase tracking-widest"
+                                className="p-4 text-[15px] font-medium text-white/60 hover:text-white"
                                 onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
                               >
                                 {cat}
@@ -302,7 +303,7 @@ export default function Navbar() {
                             ))}
                             <Link
                               href="/blogs"
-                              className="p-4 text-sm font-bold text-brand-orange/60 hover:text-brand-orange uppercase tracking-widest"
+                              className="p-4 text-[15px] font-bold text-brand-orange/80 hover:text-brand-orange"
                               onClick={() => { setIsOpen(false); setMobileBlogOpen(false); }}
                             >
                               All Stories
@@ -319,7 +320,7 @@ export default function Navbar() {
                     key={link.name}
                     href={link.href}
                     className={cn(
-                      "flex items-center justify-between p-4 rounded-2xl text-base font-black transition-all uppercase tracking-widest",
+                      "flex items-center justify-between p-4 rounded-2xl text-[17px] font-semibold transition-colors",
                       pathname === link.href ? "bg-white/10 text-brand-orange" : "text-white/80 hover:bg-white/5 hover:text-white"
                     )}
                     onClick={() => setIsOpen(false)}
@@ -338,13 +339,13 @@ export default function Navbar() {
                         <UserIcon size={24} />
                       </div>
                       <div>
-                        <p className="text-base font-black">{session.name}</p>
+                        <p className="text-base font-bold">{session.name}</p>
                         <p className="text-xs text-white/40">{session.email}</p>
                       </div>
                     </div>
                     <Link
                       href="/admin"
-                      className="flex items-center justify-center p-4 rounded-2xl border border-white/10 text-base font-black text-white gap-3 uppercase tracking-widest"
+                      className="flex items-center justify-center p-4 rounded-2xl border border-white/10 text-base font-bold text-white gap-3 uppercase tracking-widest"
                       onClick={() => setIsOpen(false)}
                     >
                       <LayoutDashboard size={20} className="text-brand-orange" />
@@ -352,7 +353,7 @@ export default function Navbar() {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center justify-center p-4 rounded-2xl bg-rose-500/10 text-rose-400 text-base font-black gap-3 uppercase tracking-widest"
+                      className="flex items-center justify-center p-4 rounded-2xl bg-rose-500/10 text-rose-400 text-base font-bold gap-3 uppercase tracking-widest"
                     >
                       <LogOut size={20} />
                       Logout
@@ -362,14 +363,14 @@ export default function Navbar() {
                   <>
                     <Link
                       href="/login"
-                      className="flex items-center justify-center p-4 rounded-2xl border border-white/10 text-base font-black text-white uppercase tracking-widest"
+                      className="flex items-center justify-center p-4 rounded-2xl border border-white/10 text-base font-bold text-white uppercase tracking-widest"
                       onClick={() => setIsOpen(false)}
                     >
                       Log in
                     </Link>
                     <Link
                       href="/signup"
-                      className="flex items-center justify-center p-4 rounded-2xl bg-brand-orange text-white text-base font-black shadow-xl uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
+                      className="flex items-center justify-center p-4 rounded-2xl bg-brand-orange text-white text-base font-bold shadow-xl uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       Join Us

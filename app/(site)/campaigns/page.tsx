@@ -183,7 +183,7 @@ export default async function CampaignsPage() {
           <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
-                Campaign <span className="text-brand-orange">Highlights</span>
+                Campaign <span className="header-highlight highlight-yellow text-brand-forest">Highlights</span>
               </h2>
               <p className="mt-4 text-slate-500 font-medium max-w-xl">Deep dives into our recent advocacy efforts, community engagements, and climate actions.</p>
             </div>
@@ -259,7 +259,7 @@ export default async function CampaignsPage() {
           <div className="mx-auto max-w-7xl px-6 relative z-10">
              <div className="text-center mb-20">
                <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight uppercase tracking-tight">
-                 Advocacy <span className="text-brand-orange">Resources</span>
+                 <span className="header-highlight highlight-yellow text-brand-forest">Pamphlets</span>
                </h2>
                <div className="mt-4 h-1.5 w-24 bg-brand-orange mx-auto rounded-full"></div>
                <p className="mt-6 text-slate-500 font-medium max-w-xl mx-auto italic">Explore our educational toolkits, community guides, and climate action pamphlets.</p>

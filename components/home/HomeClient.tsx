@@ -12,6 +12,7 @@ import {
   Users, 
   Scale,
   CheckCircle,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import HeroCarousel from "@/components/common/HeroCarousel";
@@ -126,12 +127,8 @@ export default function HomeClient({
               viewport={{ once: true }}
               variants={fadeIn}
             >
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-teal flex items-center gap-2">
-                
-              </h2>
-              <h3 className="mb-8 text-3xl font-extrabold leading-[1.2] text-slate-900 md:text-5xl">
-                Rooted in Truth, <br />
-                <span className="header-highlight highlight-cyan text-brand-navy">Rising for Justice</span>
+              <h3 className="mb-8 text-3xl font-extrabold leading-[1.2] text-slate-900 md:text-5xl tracking-tight">
+                About <span className="header-highlight highlight-yellow text-brand-forest">Us</span>
               </h3>
               
               <div className="space-y-6 text-lg leading-relaxed text-slate-700 font-medium">
@@ -165,11 +162,7 @@ export default function HomeClient({
                 className="object-cover w-full h-full"
               />
               <div className="absolute inset-0 bg-linear-to-t from-brand-dark/50 to-transparent"></div>
-              <div className="absolute bottom-6 left-6 right-6 p-6 glass-card rounded-2xl border-white/40 shadow-2xl">
-                <p className="text-brand-dark font-bold quote text-lg leading-snug">
-                  "Working with communities <br/> <span className="text-brand-forest">rather than for them.</span>"
-                </p>
-              </div>
+              
             </motion.div>
           </div>
         </div>
@@ -189,7 +182,7 @@ export default function HomeClient({
             >
               <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-orange">Stories from the field</h2>
               <h3 className="text-3xl font-extrabold text-slate-900 md:text-5xl tracking-tight leading-tight">
-                The People's <span className="header-highlight highlight-cyan text-brand-navy">Stories</span>
+                The People's <span className="header-highlight highlight-yellow text-brand-forest">Stories</span>
               </h3>
             </motion.div>
             
@@ -197,7 +190,7 @@ export default function HomeClient({
               href="/campaigns" 
               className="group inline-flex items-center gap-2 rounded-full bg-brand-navy px-8 py-3.5 text-sm font-bold text-white transition-all hover:bg-brand-orange hover:shadow-lg active:scale-95"
             >
-              View all Campaigns
+              View all Stories
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -230,7 +223,7 @@ export default function HomeClient({
           >
             <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-orange">Core Commitments</h2>
             <h3 className="mb-6 text-3xl font-extrabold text-slate-900 md:text-6xl tracking-tight leading-tight">
-              Our <span className="header-highlight highlight-cyan text-brand-navy">Focus</span>
+              Our <span className="header-highlight highlight-yellow text-brand-forest">Focus</span>
             </h3>
             <p className="mx-auto max-w-2xl text-lg text-slate-600 font-medium">
               We leverage the intersection of media, art, and community mobilization to drive systemic change for our planet and its people.
@@ -248,7 +241,7 @@ export default function HomeClient({
               {
                 title: "Gender Justice",
                 desc: "Amplifying voices of women and marginalized genders in frontline communities. We advocate for equal participation in decision-making and policies that address systemic inequalities.",
-                icon: <Heart className="h-8 w-8" />,
+                icon: <Sparkles className="h-8 w-8" />,
                 color: "bg-rose-50 text-rose-600"
               },
               {
@@ -295,8 +288,10 @@ export default function HomeClient({
             <div className="mt-20">
               <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
                 <div className="text-left">
-                  <h4 className="text-sm font-black uppercase tracking-[0.2em] text-brand-forest mb-2">Ongoing Advocacy</h4>
-                  <h5 className="text-2xl font-black text-slate-900">Latest <span className="header-highlight highlight-yellow">Campaigns</span></h5>
+                   <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-brand-orange">Ongoing Advocacy</h2>
+              <h3 className="text-3xl font-extrabold text-slate-900 md:text-5xl tracking-tight leading-tight">
+                Our Latest <span className="header-highlight highlight-yellow text-brand-forest">Campaigns</span>
+              </h3>
                 </div>
                 <Link 
                   href="/campaigns/all" 

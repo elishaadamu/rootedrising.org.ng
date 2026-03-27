@@ -38,7 +38,7 @@ export async function subscribeNewsletter(formData: FormData) {
             <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}">
               <img src="cid:logo" alt="Rooted Rising Logo" style="height: 50px; margin-bottom: 20px; border: none;" />
             </a>
-            <h2 style="color: #DA8E1F; margin-top: 0;">Welcome to Rooted Rising!</h2>
+            <h2 style="color: #DA8E1F; margin-top: 0;">Welcome to Rooted Rising Dispatch!</h2>
             <div style="text-align: left;">
               <p style="font-style: italic; font-weight: bold; color: #1A233E;">"We are Rooted in Truth, Rising for Justice."</p>
               <p>Thank you for subscribing to our perspectives. Rooted Rising is a dynamic media advocacy initiative, harnessing the power of storytelling, art, and grassroots activism to ignite climate action and gender equality.</p>
@@ -194,8 +194,8 @@ export async function notifySubscribersOfNewPost(post: {
     
     const postUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}/${catSlug}/${year}/${month}/${day}/${post.slug}`;
 
-    const categoryLabel = post.section === "Campaigns" ? "Campaign Story" : "New Perspectives";
-    const subjectPrefix = post.section === "Campaigns" ? "Campaign Update" : "New Perspectives";
+    const categoryLabel = post.section === "Campaigns" ? "Our Latest Story" : "Our New Blog....";
+    const subjectPrefix = post.section === "Campaigns" ? "Campaign Update" : "Our New Blog....";
 
     const fullImageUrl = post.image 
       ? (post.image.startsWith('http') ? post.image : `${process.env.NEXT_PUBLIC_APP_URL || 'https://rootedrising.org.ng'}${post.image.startsWith('/') ? '' : '/'}${post.image}`)
