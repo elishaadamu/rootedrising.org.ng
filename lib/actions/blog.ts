@@ -5,6 +5,7 @@ import { getSession } from "@/lib/actions/auth";
 import { revalidatePath } from "next/cache";
 import { recordActivity } from "./logs";
 import { getAllPosts } from "@/lib/blog";
+import { getAllCampaigns } from "@/lib/campaigns";
 import { notifySubscribersOfNewPost } from "./newsletter";
 
 export async function getBlogCategories() {
@@ -262,10 +263,79 @@ export async function syncMarkdownPosts() {
       syncedCount++;
     }
 
+    // 2. Sync Campaigns from _campaigns
+    const mdCampaigns = getAllCampaigns();
+    for (const campaign of mdCampaigns) {
+      // Find possible duplicates by slug OR title within the Campaigns category
+      const existing = await prisma.post.findMany({
+        where: {
+          OR: [
+            { slug: campaign.slug },
+            { title: campaign.title }
+          ],
+          section: { in: ['Campaign', 'Campaigns', 'campaign'] }
+        },
+        include: { comments: true }
+      });
+
+      if (existing.length > 0) {
+        // We found existing entries. Let's merge them into the first one.
+        const [target, ...duplicates] = existing;
+        // 1. Reassign comments from duplicates to target before deleting them
+        for (const duplicate of duplicates) {
+          if (duplicate.comments.length > 0) {
+            await prisma.comment.updateMany({
+              where: { postId: duplicate.id },
+              data: { postId: target.id }
+            });
+          }
+        }
+
+        // 2. Clear out duplicates FIRST to avoid slug collisions during the update below
+        if (duplicates.length > 0) {
+          await prisma.post.deleteMany({
+            where: { id: { in: duplicates.map((d: any) => d.id) } }
+          });
+          syncedCount += duplicates.length;
+        }
+
+        // 3. Now perform the update on target with the clean MD slug
+        await prisma.post.update({
+          where: { id: target.id },
+          data: {
+            title: campaign.title,
+            content: campaign.content,
+            excerpt: campaign.excerpt,
+            image: campaign.image,
+            slug: campaign.slug,
+            section: "Campaigns",
+            createdAt: new Date(campaign.date),
+            published: true,
+          }
+        });
+      } else {
+        // Create new entry
+        await prisma.post.create({
+          data: {
+            title: campaign.title,
+            content: campaign.content,
+            excerpt: campaign.excerpt,
+            image: campaign.image,
+            slug: campaign.slug,
+            section: "Campaigns",
+            authorId: session.id as string,
+            published: true,
+            createdAt: new Date(campaign.date),
+          }
+        });
+        syncedCount++;
+      }
+    }
+
     await recordActivity({
       action: "UPDATED",
       entity: "Post",
-      details: `Synced ${syncedCount} posts from markdown files to database.`
+      details: `Synced ${syncedCount} total posts and campaigns from markdown files to database, handling duplicates.`
     });
 
     revalidatePath("/admin/blog");

@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Plus, Edit2, Calendar, User, FileText, Send } from "lucide-react";
 import DeletePostButton from "@/components/admin/DeletePostButton";
+import SyncMarkdownButton from "@/components/admin/SyncMarkdownButton";
 
 export default async function AdminHighlights() {
   const posts = await prisma.post.findMany({

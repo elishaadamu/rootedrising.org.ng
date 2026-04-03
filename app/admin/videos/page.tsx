@@ -1,8 +1,6 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { Plus, Play, Edit2, RefreshCcw } from "lucide-react";
-import { seedInitialVideos } from "@/lib/actions/videos";
-import { seedCampaignContent } from "@/lib/actions/seed_campaigns";
+import { Plus, Play, Edit2 } from "lucide-react";
 import DeleteVideoButton from "@/components/admin/DeleteVideoButton";
 
 
@@ -20,25 +18,13 @@ export default async function AdminVideos() {
           <p className="text-sm sm:text-base text-slate-500 font-medium max-w-xl">Manage the videos showcased in the "Voice of the Frontline" section.</p>
         </div>
         
-        <div className="flex flex-wrap gap-4">
-          <form action={async () => {
-             "use server";
-             await seedInitialVideos();
-             await seedCampaignContent();
-          }}>
-            <button type="submit" className="flex items-center justify-center gap-2 rounded-2xl bg-white border border-slate-200 px-6 py-3.5 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all font-inter shadow-xs">
-               <RefreshCcw size={18} />
-               Sync All Site Content
-            </button>
-          </form>
-          <Link 
-            href="/admin/videos/new"
-            className="flex items-center justify-center gap-2 rounded-2xl bg-brand-forest px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-forest-500/10 transition-all hover:bg-brand-dark hover:-translate-y-1 active:scale-95 w-full sm:w-auto"
-          >
-            <Plus size={18} />
-            Add New Video
-          </Link>
-        </div>
+        <Link 
+          href="/admin/videos/new"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-brand-forest px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-forest-500/10 transition-all hover:bg-brand-dark hover:-translate-y-1 active:scale-95 w-full sm:w-auto"
+        >
+          <Plus size={18} />
+          Add New Video
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
