@@ -17,6 +17,17 @@ export async function getTeamMembers() {
   }
 }
 
+export async function getTeamMemberById(id: string) {
+  try {
+    const member = await prisma.teamMember.findUnique({
+      where: { id },
+    });
+    return { success: true, data: member };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
 export async function createTeamMember(data: any) {
   try {
     const member = await prisma.teamMember.create({

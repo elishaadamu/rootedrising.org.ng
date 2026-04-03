@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Linkedin, Facebook, Instagram, Mail, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getTeamMembers } from "@/lib/actions/team";
 
 interface TeamMember {
-  id?: string;
+  id: string;
   name: string;
   role: string;
   bio: string;
@@ -24,10 +25,10 @@ const TeamCard = ({ member }: { member: TeamMember }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="group relative h-full bg-white rounded-4xl p-8 border border-slate-200 transition-all duration-500 flex flex-col items-center text-center shadow-xs"
+      className="group relative h-full bg-white rounded-4xl p-8 border border-slate-200 transition-all duration-500 flex flex-col items-center text-center shadow-xs hover:border-brand-forest/30 hover:shadow-md"
     >
       {/* Floating Circular Avatar */}
-      <div className="relative h-20 w-20 sm:h-24 sm:w-24 mb-6 rounded-full overflow-hidden shadow-sm group-hover:scale-110 transition-transform duration-500">
+      <div className="relative h-24 w-24 sm:h-28 sm:w-28 mb-6 rounded-full overflow-hidden shadow-sm group-hover:scale-110 transition-transform duration-500 mx-auto ring-4 ring-slate-50">
         <Image 
           src={member.image || "/images/gallery/IMG_2006.JPG"} 
           alt={member.name} 
@@ -36,36 +37,46 @@ const TeamCard = ({ member }: { member: TeamMember }) => {
         />
       </div>
 
-      <div className="flex-1 space-y-2">
-        <h4 className="text-base sm:text-lg font-bold text-slate-900 transition-colors uppercase tracking-tight">{member.name}</h4>
-        <p className="text-xs sm:text-sm font-semibold text-indigo-600/90 tracking-wide">{member.role}</p>
-        <p className="text-slate-500 text-[13px] sm:text-sm leading-relaxed line-clamp-4 pt-3 px-1 font-medium">
-          {member.bio}
+      <div className="flex-1 space-y-3 w-full">
+        <h4 className="text-lg sm:text-xl font-bold text-slate-900 transition-colors uppercase tracking-tight group-hover:text-brand-forest">{member.name}</h4>
+        <p className="text-xs sm:text-sm font-bold text-brand-forest/80 tracking-widest uppercase">{member.role}</p>
+        <p className="text-slate-500 text-[13px] sm:text-sm leading-relaxed line-clamp-3 pt-2 px-1 font-medium italic">
+          "{member.bio}"
         </p>
       </div>
 
-      {/* Social Icons at bottom */}
-      <div className="mt-8 flex items-center justify-center gap-4 sm:gap-6 text-slate-400">
+      {/* Social Icons - Now part of the flow to avoid overlapping */}
+      <div className="mt-8 flex items-center justify-center gap-5 text-slate-400">
         {member.linkedin && (
-          <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors">
-            <Linkedin size={18} strokeWidth={1.5} />
+          <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-brand-forest transition-colors transform hover:-translate-y-1">
+            <Linkedin size={18} strokeWidth={2} />
           </a>
         )}
         {member.facebook && (
-          <a href={member.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors">
-            <Facebook size={18} strokeWidth={1.5} />
+          <a href={member.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-brand-forest transition-colors transform hover:-translate-y-1">
+            <Facebook size={18} strokeWidth={2} />
           </a>
         )}
         {member.instagram && (
-          <a href={member.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors">
-            <Instagram size={18} strokeWidth={1.5} />
+          <a href={member.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-brand-forest transition-colors transform hover:-translate-y-1">
+            <Instagram size={18} strokeWidth={2} />
           </a>
         )}
         {member.email && (
-          <a href={`mailto:${member.email}`} className="hover:text-slate-900 transition-colors">
-            <Mail size={18} strokeWidth={1.5} />
+          <a href={`mailto:${member.email}`} className="hover:text-brand-forest transition-colors transform hover:-translate-y-1">
+            <Mail size={18} strokeWidth={2} />
           </a>
         )}
+      </div>
+
+      <div className="mt-8 w-full pt-6 border-t border-slate-100">
+        <Link 
+            href={`/team/${member.id}`}
+            className="text-xs font-black uppercase tracking-[0.2em] text-brand-forest hover:text-brand-teal transition-colors flex items-center justify-center gap-2 group/btn"
+        >
+            <span>Know more about {member.name.split(' ')[0]}</span>
+            <ChevronRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
+        </Link>
       </div>
     </motion.div>
   );
